@@ -154,14 +154,6 @@
                         </svg> Error 500</a></li>
             </ul>
         </li>
-        <li class="nav-item mt-auto"><a class="nav-link" href="https://coreui.io/docs/templates/installation/" target="_blank">
-                <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-description"></use>
-                </svg> Docs</a></li>
-        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="https://coreui.io/product/bootstrap-dashboard-template/" target="_top">
-                <svg class="nav-icon text-primary">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-layers"></use>
-                </svg> Try CoreUI PRO</a></li>
     </ul>
     <div class="sidebar-footer border-top d-none d-md-flex">
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
