@@ -1,7 +1,7 @@
 <!-- Events Section -->
 <section id="events" class="events section">
 
-  <img class="slider-bg" src="{{ asset('assets/img/events-bg.jpg') }}" alt="" data-aos="fade-in">
+  <img class="slider-bg" src="{{ asset('frontend/img/events-bg.jpg') }}" alt="" data-aos="fade-in">
 
   <div class="container">
 
@@ -26,7 +26,7 @@
         <div class="swiper-slide">
           <div class="row gy-4 event-item">
             <div class="col-lg-6">
-              <img src="{{ asset('assets/img/events-slider/events-slider-1.jpg') }}" class="img-fluid" alt="">
+              <img src="{{ asset('frontend/img/events-slider/events-slider-1.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="col-lg-6 pt-4 pt-lg-0 content">
               <h3>Birthday Party Catering</h3>
@@ -51,7 +51,7 @@
         <div class="swiper-slide">
           <div class="row gy-4 event-item">
             <div class="col-lg-6">
-              <img src="{{ asset('assets/img/events-slider/events-slider-2.jpg') }}" class="img-fluid" alt="">
+              <img src="{{ asset('frontend/img/events-slider/events-slider-2.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="col-lg-6 pt-4 pt-lg-0 content">
               <h3>Corporate Events</h3>
@@ -76,7 +76,7 @@
         <div class="swiper-slide">
           <div class="row gy-4 event-item">
             <div class="col-lg-6">
-              <img src="{{ asset('assets/img/events-slider/events-slider-3.jpg') }}" class="img-fluid" alt="">
+              <img src="{{ asset('frontend/img/events-slider/events-slider-3.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="col-lg-6 pt-4 pt-lg-0 content">
               <h3>Wedding Catering</h3>

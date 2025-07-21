@@ -44,7 +44,7 @@
               <span>Absolutely amazing food and lightning-fast delivery! The grilled chicken was perfectly seasoned and the truffle fries were to die for. Will definitely be ordering again soon.</span>
               <i class="bi bi-quote quote-icon-right"></i>
             </p>
-            <img src="{{ asset('assets/img/testimonials/testimonials-1.jpg') }}" class="testimonial-img" alt="">
+            <img src="{{ asset('frontend/img/testimonials/testimonials-1.jpg') }}" class="testimonial-img" alt="">
             <h3>Sarah Johnson</h3>
             <h4>Regular Customer</h4>
           </div>
@@ -57,7 +57,7 @@
               <span>Foodymat catered our wedding and it was absolutely perfect! The food was exceptional and the service was flawless. All our guests raved about the meal. Highly recommend!</span>
               <i class="bi bi-quote quote-icon-right"></i>
             </p>
-            <img src="{{ asset('assets/img/testimonials/testimonials-2.jpg') }}" class="testimonial-img" alt="">
+            <img src="{{ asset('frontend/img/testimonials/testimonials-2.jpg') }}" class="testimonial-img" alt="">
             <h3>Michael Chen</h3>
             <h4>Wedding Client</h4>
           </div>
@@ -70,7 +70,7 @@
               <span>As a vegetarian, I appreciate the variety of plant-based options. The quinoa-stuffed peppers are incredible and the salads are always fresh. Great healthy choices!</span>
               <i class="bi bi-quote quote-icon-right"></i>
             </p>
-            <img src="{{ asset('assets/img/testimonials/testimonials-3.jpg') }}" class="testimonial-img" alt="">
+            <img src="{{ asset('frontend/img/testimonials/testimonials-3.jpg') }}" class="testimonial-img" alt="">
             <h3>Emma Rodriguez</h3>
             <h4>Health Enthusiast</h4>
           </div>
@@ -83,7 +83,7 @@
               <span>I order from Foodymat for all my corporate meetings. The food is always fresh, arrives on time, and impresses my clients. Professional service every time.</span>
               <i class="bi bi-quote quote-icon-right"></i>
             </p>
-            <img src="{{ asset('assets/img/testimonials/testimonials-4.jpg') }}" class="testimonial-img" alt="">
+            <img src="{{ asset('frontend/img/testimonials/testimonials-4.jpg') }}" class="testimonial-img" alt="">
             <h3>David Thompson</h3>
             <h4>Business Owner</h4>
           </div>
@@ -96,7 +96,7 @@
               <span>The best food delivery service in town! Quality ingredients, creative dishes, and excellent customer service. The Maryland crab cakes are restaurant-quality.</span>
               <i class="bi bi-quote quote-icon-right"></i>
             </p>
-            <img src="{{ asset('assets/img/testimonials/testimonials-5.jpg') }}" class="testimonial-img" alt="">
+            <img src="{{ asset('frontend/img/testimonials/testimonials-5.jpg') }}" class="testimonial-img" alt="">
             <h3>Jennifer Wilson</h3>
             <h4>Food Blogger</h4>
           </div>

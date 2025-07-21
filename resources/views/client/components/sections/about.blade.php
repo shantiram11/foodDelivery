@@ -5,7 +5,7 @@
 
     <div class="row gy-4">
       <div class="col-lg-6 order-1 order-lg-2">
-        <img src="{{ asset('assets/img/about.jpg') }}" class="img-fluid about-img" alt="">
+        <img src="{{ asset('frontend/img/about.jpg') }}" class="img-fluid about-img" alt="">
       </div>
       <div class="col-lg-6 order-2 order-lg-1 content">
         <h3>Fresh Ingredients, Exceptional Taste</h3>

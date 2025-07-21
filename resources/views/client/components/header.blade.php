@@ -20,7 +20,7 @@
     <div class="container position-relative d-flex align-items-center justify-content-between">
       <a href="{{ url('/') }}" class="logo d-flex align-items-center me-auto me-xl-0">
         <!-- Uncomment the line below if you also wish to use an image logo -->
-        <img src="{{ asset('assets/img/logo.svg') }}" alt="">
+        <img src="{{ asset('frontend/img/logo.svg') }}" alt="">
 
       </a>
 
@@ -56,6 +56,12 @@
       </nav>
 
       <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Order Now</a>
+      <a class="btn-clean d-none d-xl-block ms-2" href="{{ route('login') }}">
+        <i class="bi bi-person"></i>Login
+      </a>
+      <a class="btn-clean d-none d-xl-block ms-2" href="{{ route('register') }}">
+        <i class="bi bi-person-plus"></i>Signup
+      </a>
 
     </div>
 

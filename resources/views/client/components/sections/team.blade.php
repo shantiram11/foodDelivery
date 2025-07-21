@@ -13,7 +13,7 @@
 
       <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
         <div class="member">
-          <img src="{{ asset('assets/img/chefs/chefs-1.jpg') }}" class="img-fluid" alt="">
+          <img src="{{ asset('frontend/img/chefs/chefs-1.jpg') }}" class="img-fluid" alt="">
           <div class="member-info">
             <div class="member-info-content">
               <h4>Chef Alessandro Martinez</h4>
@@ -31,7 +31,7 @@
 
       <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
         <div class="member">
-          <img src="{{ asset('assets/img/chefs/chefs-2.jpg') }}" class="img-fluid" alt="">
+          <img src="{{ asset('frontend/img/chefs/chefs-2.jpg') }}" class="img-fluid" alt="">
           <div class="member-info">
             <div class="member-info-content">
               <h4>Chef Sophia Chen</h4>
@@ -49,7 +49,7 @@
 
       <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
         <div class="member">
-          <img src="{{ asset('assets/img/chefs/chefs-3.jpg') }}" class="img-fluid" alt="">
+          <img src="{{ asset('frontend/img/chefs/chefs-3.jpg') }}" class="img-fluid" alt="">
           <div class="member-info">
             <div class="member-info-content">
               <h4>Chef Marcus Johnson</h4>

@@ -39,7 +39,7 @@
                 <p>Our Monday special includes our famous quinoa-stuffed bell peppers, roasted vegetable pasta, and a fresh garden salad. All made with locally sourced organic produce and seasoned with house-made herb blends. Perfect for health-conscious diners looking for satisfying meat-free options.</p>
               </div>
               <div class="col-lg-4 text-center order-1 order-lg-2">
-                <img src="{{ asset('assets/img/specials-1.png') }}" alt="" class="img-fluid">
+                <img src="{{ asset('frontend/img/specials-1.png') }}" alt="" class="img-fluid">
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@
                 <p>Enjoy our signature carnitas, grilled fish, and vegetarian black bean tacos served with Mexican rice, refried beans, and our famous guacamole made fresh daily. Don't forget to try our house margaritas and agua frescas!</p>
               </div>
               <div class="col-lg-4 text-center order-1 order-lg-2">
-                <img src="{{ asset('assets/img/specials-2.png') }}" alt="" class="img-fluid">
+                <img src="{{ asset('frontend/img/specials-2.png') }}" alt="" class="img-fluid">
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@
                 <p>Choose from Buffalo, BBQ, honey garlic, teriyaki, cajun dry rub, and more. Served with celery sticks, carrots, and your choice of ranch or blue cheese dressing. Perfect for sharing or enjoying solo with our crispy seasoned fries.</p>
               </div>
               <div class="col-lg-4 text-center order-1 order-lg-2">
-                <img src="{{ asset('assets/img/specials-3.png') }}" alt="" class="img-fluid">
+                <img src="{{ asset('frontend/img/specials-3.png') }}" alt="" class="img-fluid">
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@
                 <p>Featured dishes include our famous meatloaf with garlic mashed potatoes, classic fried chicken with mac and cheese, and our signature pot roast with root vegetables. All served with warm dinner rolls and honey butter.</p>
               </div>
               <div class="col-lg-4 text-center order-1 order-lg-2">
-                <img src="{{ asset('assets/img/specials-4.png') }}" alt="" class="img-fluid">
+                <img src="{{ asset('frontend/img/specials-4.png') }}" alt="" class="img-fluid">
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@
                 <p>Choose from ribeye, filet mignon, or New York strip, all aged 28 days for maximum flavor and tenderness. Served with loaded baked potato or truffle fries, seasonal vegetables, and our signature steak sauce. Add lobster tail for the surf and turf experience.</p>
               </div>
               <div class="col-lg-4 text-center order-1 order-lg-2">
-                <img src="{{ asset('assets/img/specials-5.png') }}" alt="" class="img-fluid">
+                <img src="{{ asset('frontend/img/specials-5.png') }}" alt="" class="img-fluid">
               </div>
             </div>
           </div>
