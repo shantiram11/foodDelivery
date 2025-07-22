@@ -23,10 +23,10 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Users</a>
+                    <a class="nav-link" href="{{route('users.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add User</a>
+                    <a class="nav-link" href="{{route('users.create')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add User</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> User Roles</a>

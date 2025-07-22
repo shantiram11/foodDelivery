@@ -50,6 +50,8 @@
 
     <!-- ChartJS Styles -->
     <link href="{{ asset('vendors/@coreui/chartjs/css/coreui-chartjs.css') }}" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet"/>
+
 </head>
 
 <body>
@@ -79,12 +81,16 @@
         }
     });
 </script>
-
 <!-- Plugins and scripts required by this view -->
 <script src="{{ asset('vendors/chart.js/js/chart.umd.js') }}"></script>
 <script src="{{ asset('vendors/@coreui/chartjs/js/coreui-chartjs.js') }}"></script>
 <script src="{{ asset('vendors/@coreui/utils/js/index.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+
+@stack('scripts')
 </body>
 </html>
