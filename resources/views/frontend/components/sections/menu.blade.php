@@ -91,7 +91,7 @@
         <div class="menu-action">
           <button class="add-to-cart-btn">Add to Cart</button>
         </div>
-      </div>
+        </div>
 
       <!-- Additional Uptown Items -->
       <div class="col-lg-6 menu-item isotope-item filter-uptown">
@@ -105,7 +105,7 @@
         <div class="menu-action">
           <button class="add-to-cart-btn">Add to Cart</button>
         </div>
-      </div>
+        </div>
 
       <!-- Additional Riverside Items -->
       <div class="col-lg-6 menu-item isotope-item filter-riverside">
@@ -133,7 +133,7 @@
 
   </div>
 
-</section><!-- /Menu Section -->
+</section><!-- /Menu Section --> 
 
 <style>
 .section-title {
@@ -178,7 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
     button.addEventListener('click', function() {
       const menuItem = this.closest('.menu-item');
       const itemName = menuItem.querySelector('.menu-content a').textContent;
-      const itemPrice = menuItem.querySelector('.menu-content span').textContent;
+      const itemPrice = parseFloat(menuItem.querySelector('.menu-content span').textContent.replace('$', ''));
+      const itemImage = menuItem.querySelector('img').src;
+      const itemId = Date.now().toString(); // Generate unique ID for the item
       
       // Animation feedback
       this.textContent = 'Added!';
@@ -188,8 +190,15 @@ document.addEventListener('DOMContentLoaded', function() {
         this.style.backgroundColor = '';
       }, 1000);
       
-      // Here you can add your cart logic
-      console.log('Added to cart:', itemName, itemPrice);
+      // Dispatch cart event
+      window.dispatchEvent(new CustomEvent('addToCart', {
+        detail: {
+          id: itemId,
+          name: itemName,
+          price: itemPrice,
+          image: itemImage
+        }
+      }));
     });
   });
 });
