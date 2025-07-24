@@ -9,29 +9,10 @@
       <!-- Main Navigation -->
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="#hero" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#menu">Menu</a></li>
-          <li class="dropdown">
-            <a href="#"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Food Delivery</a></li>
-              <li class="dropdown">
-                <a href="#"><span>Catering</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Corporate Catering</a></li>
-                  <li><a href="#">Party Catering</a></li>
-                  <li><a href="#">Wedding Catering</a></li>
-                  <li><a href="#">Event Planning</a></li>
-                  <li><a href="#">Custom Menus</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Meal Plans</a></li>
-              <li><a href="#">Gift Cards</a></li>
-              <li><a href="#">Corporate Orders</a></li>
-            </ul>
-          </li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
+          <li><a href="{{ route('home') }}#about">About</a></li>
+          <li><a href="{{ route('home') }}#order-online">Order Online</a></li>
+          <li><a href="{{ route('home') }}#contact">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -39,18 +20,14 @@
       <!-- Action Buttons -->
       <div class="header-actions d-none d-xl-flex align-items-center gap-3">
         <!-- Cart -->
-        <div class="cart-wrapper">
-          <button class="btn-clean cart-btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-            <i class="bi bi-cart3"></i>
-            <span class="cart-count">0</span>
-          </button>
-        </div>
-
-        <!-- Order Button -->
-        <a class="btn-book-a-table" href="#book-a-table">
-          <i class="bi bi-bag-check me-2"></i>
-          Order Now
-        </a>
+        <button class="btn-book-a-table position-relative" type="button"
+   data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+          <i class="bi bi-cart-check me-2"></i>
+          Orders
+          <span class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            0
+          </span>
+        </button>
 
         <!-- Auth Buttons -->
         <div class="auth-buttons d-flex gap-2">

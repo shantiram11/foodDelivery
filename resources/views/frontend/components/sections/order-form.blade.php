@@ -1,5 +1,5 @@
 <!-- Order Form Section -->
-<section id="book-a-table" class="book-a-table section">
+<section id="order-online" class="book-a-table section">
 
   <!-- Section Title -->
   <div class="container section-title" data-aos="fade-up">

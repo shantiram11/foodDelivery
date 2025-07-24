@@ -21,13 +21,7 @@
           </div>
         </div><!-- End Info Item -->
 
-        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-          <i class="bi bi-clock flex-shrink-0"></i>
-          <div>
-            <h3>Open Hours</h3>
-            <p>Monday-Sunday:<br>10:00 AM - 11:00 PM</p>
-          </div>
-        </div><!-- End Info Item -->
+        
 
         <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
           <i class="bi bi-telephone flex-shrink-0"></i>
@@ -36,15 +30,6 @@
             <p>+1 (555) 123-FOOD</p>
           </div>
         </div><!-- End Info Item -->
-
-        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
-          <i class="bi bi-envelope flex-shrink-0"></i>
-          <div>
-            <h3>Email Us</h3>
-            <p>orders@foodymat.com</p>
-          </div>
-        </div><!-- End Info Item -->
-
       </div>
 
       <div class="col-lg-8">

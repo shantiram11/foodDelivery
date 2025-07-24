@@ -6,6 +6,7 @@ use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[FrontController::class,'index'])->name('home');
+Route::get('/checkout', [FrontController::class, 'checkout'])->name('checkout');
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 

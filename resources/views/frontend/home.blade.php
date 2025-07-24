@@ -10,19 +10,13 @@
 
 @include('frontend.components.sections.about')
 
-@include('frontend.components.sections.why-us')
-
 @include('frontend.components.sections.menu')
 
-
-@include('frontend.components.sections.events')
-
 @include('frontend.components.sections.order-form')
-
-@include('frontend.components.sections.our-resturant')
 
 @include('frontend.components.sections.contact')
 
 @include('frontend.components.sections.testimonials')
+
 
 @endsection 

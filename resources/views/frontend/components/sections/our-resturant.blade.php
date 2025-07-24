@@ -1,13 +1,13 @@
 <!-- Restaurant Locations Section -->
-<section id="locations" class="chefs section">
+<!-- <section id="locations" class="chefs section"> -->
 
   <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
+  <!-- <div class="container section-title" data-aos="fade-up">
     <h2>OUR LOCATIONS</h2>
     <p class="golden-text">Visit Us Across the City</p>
-  </div><!-- End Section Title -->
+  </div> -->
 
-  <div class="container">
+  <!-- <div class="container">
     <div class="row g-4">
       <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
         <div class="member h-100">
@@ -93,7 +93,7 @@
   </div>
 
 </section><!-- /Restaurant Locations Section -->
-
+<!-- 
 <style>
 .golden-text {
   color: var(--accent-color) !important;
@@ -153,4 +153,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
-</script> 
+</script>  -->

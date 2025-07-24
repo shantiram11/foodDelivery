@@ -4,11 +4,9 @@
     <div class="row gy-4">
       <div class="col-lg-4 col-md-6 footer-about">
         <a href="{{ url('/') }}" class="logo d-flex align-items-center">
-          <span class="sitename">Foodymat</span>
+          <img src="{{ asset('frontend/img/logo.svg') }}" alt="Foodymat" style="height: 32px; width: auto;">
         </a>
-        <div class="footer-contact pt-3">
-          <p>1234 Food Street</p>
-          <p>Downtown District, NY 10001</p>
+        <div class="footer-contact pt-2">
           <p class="mt-3"><strong>Phone:</strong> <span>+1 (555) 123-FOOD</span></p>
           <p><strong>Email:</strong> <span>orders@foodymat.com</span></p>
         </div>
@@ -20,24 +18,21 @@
         </div>
       </div>
 
-      <div class="col-lg-2 col-md-3 footer-links">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Our Menu</a></li>
-          <li><a href="#">Order Online</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </div>
+                    <div class="col-lg-2 col-md-3 footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                  <li><a href="{{ route('home') }}">Home</a></li>
+                  <li><a href="{{ route('home') }}#about">About Us</a></li>
+                  <li><a href="{{ route('home') }}#menu">Our Menu</a></li>
+                  <li><a href="{{ route('home') }}#order-online">Order Online</a></li>
+                  <li><a href="{{ route('home') }}#contact">Contact</a></li>
+                </ul>
+              </div>
 
       <div class="col-lg-2 col-md-3 footer-links">
         <h4>Our Services</h4>
         <ul>
           <li><a href="#">Food Delivery</a></li>
-          <li><a href="#">Catering Services</a></li>
-          <li><a href="#">Party Planning</a></li>
-          <li><a href="#">Corporate Events</a></li>
           <li><a href="#">Gift Cards</a></li>
         </ul>
       </div>

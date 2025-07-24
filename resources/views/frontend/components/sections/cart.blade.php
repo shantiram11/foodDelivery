@@ -94,11 +94,11 @@
     <div class="cart-footer mt-auto pt-3 border-top bg-white">
         <div class="subtotal d-flex justify-content-between mb-3">
             <span>Subtotal</span>
-            <span class="subtotal-amount">$25.45</span>
+            <span class="subtotal-amount">Rs. 1030</span>
         </div>
-        <button class="btn-checkout w-100">
-            Proceed To Checkout
-        </button>
+        <a href="{{ route('checkout') }}" class="btn-checkout w-100 d-block text-center text-decoration-none">
+            Proceed To Checkout • Rs. 1030
+        </a>
     </div>
 </div>
 
@@ -312,4 +312,27 @@
     color: #fff;
     transform: translateY(-1px);
 }
-</style> 
+</style>
+
+<script>
+function handleCheckout(event) {
+    event.preventDefault();
+    
+    // Close the cart offcanvas
+    const offcanvas = document.querySelector('.offcanvas');
+    if (offcanvas) {
+        const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+        if (bsOffcanvas) {
+            bsOffcanvas.hide();
+        }
+    }
+    
+    // Scroll to checkout section
+    const checkoutSection = document.querySelector('#checkout');
+    if (checkoutSection) {
+        setTimeout(() => {
+            checkoutSection.scrollIntoView({ behavior: 'smooth' });
+        }, 300); // Small delay to allow offcanvas to close
+    }
+}
+</script> 
