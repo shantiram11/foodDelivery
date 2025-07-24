@@ -152,7 +152,7 @@
         <!-- Settings -->
         <li class="nav-group">
             <a class="nav-link nav-group-toggle" href="#">
-                <svg class="nav-icon">
+                        <svg class="nav-icon">
                     <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
                 </svg> Settings
             </a>

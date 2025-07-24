@@ -12,7 +12,7 @@
       <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
         <div class="member h-100">
           <a href="#menu" class="location-link" data-restaurant="downtown">
-            <img src="{{ asset('frontend/img/gallery/gallery-1.jpg') }}" class="img-fluid" alt="Downtown Restaurant">
+          <img src="{{ asset('frontend/img/gallery/gallery-1.jpg') }}" class="img-fluid" alt="Downtown Restaurant">
           </a>
           <div class="member-info">
             <div class="member-info-content">
@@ -32,7 +32,7 @@
       <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
         <div class="member h-100">
           <a href="#menu" class="location-link" data-restaurant="uptown">
-            <img src="{{ asset('frontend/img/gallery/gallery-2.jpg') }}" class="img-fluid" alt="Uptown Restaurant">
+          <img src="{{ asset('frontend/img/gallery/gallery-2.jpg') }}" class="img-fluid" alt="Uptown Restaurant">
           </a>
           <div class="member-info">
             <div class="member-info-content">
@@ -52,7 +52,7 @@
       <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
         <div class="member h-100">
           <a href="#menu" class="location-link" data-restaurant="riverside">
-            <img src="{{ asset('frontend/img/gallery/gallery-3.jpg') }}" class="img-fluid" alt="Riverside Restaurant">
+          <img src="{{ asset('frontend/img/gallery/gallery-3.jpg') }}" class="img-fluid" alt="Riverside Restaurant">
           </a>
           <div class="member-info">
             <div class="member-info-content">
@@ -72,7 +72,7 @@
       <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
         <div class="member h-100">
           <a href="#menu" class="location-link" data-restaurant="mall">
-            <img src="{{ asset('frontend/img/gallery/gallery-4.jpg') }}" class="img-fluid" alt="Mall Branch Restaurant">
+          <img src="{{ asset('frontend/img/gallery/gallery-4.jpg') }}" class="img-fluid" alt="Mall Branch Restaurant">
           </a>
           <div class="member-info">
             <div class="member-info-content">
@@ -135,7 +135,7 @@
 .menu-link:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
-</style>
+</style> 
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
