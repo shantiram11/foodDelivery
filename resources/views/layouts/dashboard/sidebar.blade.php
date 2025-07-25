@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
     <div class="sidebar-header border-bottom">
         <div class="sidebar-brand">
-            <h3>Foodymat</h3>
+            <img src="{{asset('assets/brand/logo.svg')}}" alt="Foodymat" class="img-fluid">
         </div>
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()"></button>
     </div>
@@ -43,10 +43,10 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Restaurants</a>
+                    <a class="nav-link" href="{{route('restaurants.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Restaurants</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add Restaurant</a>
+                    <a class="nav-link" href="{{route('restaurants.create')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add Restaurant</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Categories</a>
@@ -173,7 +173,5 @@
         </li>
 
     </ul>
-    <div class="sidebar-footer border-top d-none d-md-flex">
-        <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
-    </div>
+
 </div>
