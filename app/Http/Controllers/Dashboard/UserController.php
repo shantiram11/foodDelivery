@@ -38,7 +38,9 @@ class UserController extends Controller
                     'email' => $user->email,
                     'role' => $user->role ?? 'User',
                     'created_at' => $user->created_at->format('Y-m-d'),
-                    'action' => '<a href="'.route('users.edit', $user->id).'" class="btn btn-sm btn-primary">Edit</a>'
+                    'action' => '
+                        <a href="'.route('users.edit', $user->id).'" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="'.route('users.destroy', $user->id).'" class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure you want to delete this user?\')">Delete</a>'
                 ];
             });
 
@@ -69,10 +71,23 @@ class UserController extends Controller
         $user = User::find($id);
         return view('dashboard.users.edit',compact('user'));
     }
-    public function update(Request $request){
 
+    public function update(Request $request, $id){
+        $user = User::find($id);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        return redirect()->route('users.index')->with('status', 'user-updated');
     }
-    public function destroy(){
-//        return view('dashboard.users.destroy');
+    
+    public function destroy($id){
+        $user = User::find($id);
+        if($user) {
+            $user->delete();
+            return redirect()->route('users.index')->with('status', 'user-deleted');
+        }
+        return redirect()->route('users.index')->with('error', 'User not found');
     }
 }
