@@ -28,9 +28,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('users.create')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add User</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> User Roles</a>
-                </li>
             </ul>
         </li>
 
@@ -91,25 +88,7 @@
             </ul>
         </li>
 
-        <!-- Reservations -->
-        <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
-                <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-calendar"></use>
-                </svg> Reservations
-            </a>
-            <ul class="nav-group-items compact">
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Reservations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> New Booking</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Calendar View</a>
-                </li>
-            </ul>
-        </li>
+        
 
         <!-- Reviews & Ratings -->
         <li class="nav-item">
@@ -129,13 +108,13 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Sales Report</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Sales Report</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Order Report</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Order Report</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Revenue Report</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Revenue Report</a>
                 </li>
             </ul>
         </li>
@@ -149,16 +128,16 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> General</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> General</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Appearance</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Appearance</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Email</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Email</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> System</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> System</a>
                 </li>
             </ul>
         </li>
