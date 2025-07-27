@@ -108,13 +108,13 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Sales Report</a>
+                    <a class="nav-link" href="{{route('reports.sales')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Sales Report</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Order Report</a>
+                    <a class="nav-link" href="{{route('reports.orders')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Order Report</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Revenue Report</a>
+                    <a class="nav-link" href="{{route('reports.revenue')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Revenue Report</a>
                 </li>
             </ul>
         </li>
@@ -128,16 +128,13 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> General</a>
+                    <a class="nav-link" href="{{route('settings.general')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> General</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Appearance</a>
+                    <a class="nav-link" href="{{route('settings.appearance')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Appearance</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Email</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> System</a>
+                    <a class="nav-link" href="{{route('settings.email')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Email</a>
                 </li>
             </ul>
         </li>

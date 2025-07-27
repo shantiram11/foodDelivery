@@ -56,6 +56,24 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::get('/orders/completed', [OrderController::class, 'completed'])->name('orders.completed');
 
 
+    // reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/reports/orders', [ReportController::class, 'orders'])->name('reports.orders');
+    Route::get('/reports/revenue', [ReportController::class, 'revenue'])->name('reports.revenue');
+
+    // settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings/general', [SettingController::class, 'general'])->name('settings.general');
+    Route::get('/settings/appearance', [SettingController::class, 'appearance'])->name('settings.appearance');
+    Route::get('/settings/email', [SettingController::class, 'email'])->name('settings.email');
+
+    
+
+
+
+
+
     
 
 
