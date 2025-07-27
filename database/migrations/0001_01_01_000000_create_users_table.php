@@ -17,6 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            $table->unsignedBigInteger('restaurant_id')->nullable();
+
+            $table->foreign('restaurant_id')
+            ->references('id')
+            ->on('restaurants')
+            ->onDelete('cascade');
+
             $table->rememberToken();
             $table->timestamps();
         

@@ -1,6 +1,7 @@
 {{-- resources/views/dashboard.blade.php --}}
 @extends('layouts.dashboard.master')
 
+
 @section('title', 'Dashboard')
 
 @section('content')

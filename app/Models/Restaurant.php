@@ -29,4 +29,13 @@ class Restaurant extends Model
     {
         return $this->hasMany(Menu::class);
     }
+
+    /**
+     * Get the users that belong to the restaurant.
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 } 

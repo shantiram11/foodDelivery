@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'restaurant_id',
     ];
 
     /**
@@ -46,5 +47,11 @@ class User extends Authenticatable
         ];
     }
 
-    
+    /**
+     * Get the restaurant that the user belongs to.
+     */
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 }

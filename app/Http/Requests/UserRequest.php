@@ -25,6 +25,7 @@ class UserRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
+            'restaurant_id' => 'required|exists:restaurants,id',
 //            'role' => 'required',
 //            'password_confirmation' => 'confirmed|same:password',
         ];

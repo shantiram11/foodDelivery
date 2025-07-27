@@ -7,7 +7,9 @@
             @csrf
             @method('PATCH')
             @include('dashboard.users._form', ['user' => $user])
+
             <button type="submit" class="btn btn-success">Update</button>
         </form>
     </div>
+
 @endsection

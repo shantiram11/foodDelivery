@@ -7,18 +7,18 @@
     </div>
     <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('dashboard') }}">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-speedometer"></use>
                 </svg> Dashboard
             </a>
         </li>
 
         <!-- Users Management -->
         <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-user"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-user"></use>
                 </svg> Users
             </a>
             <ul class="nav-group-items compact">
@@ -33,9 +33,9 @@
 
         <!-- Restaurant Management -->
         <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-restaurant"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-restaurant"></use>
                 </svg> Restaurants
             </a>
             <ul class="nav-group-items compact">
@@ -50,9 +50,9 @@
 
         <!-- Menu Management -->
         <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-fastfood"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-fastfood"></use>
                 </svg> Menu
             </a>
             <ul class="nav-group-items compact">
@@ -67,9 +67,9 @@
 
         <!-- Order Management -->
         <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-cart"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-cart"></use>
                 </svg> Orders
             </a>
             <ul class="nav-group-items compact">
@@ -92,18 +92,18 @@
 
         <!-- Reviews & Ratings -->
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-star"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-star"></use>
                 </svg> Reviews & Ratings
             </a>
         </li>
 
         <!-- Reports -->
         <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-chart-line"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-chart-line"></use>
                 </svg> Reports
             </a>
             <ul class="nav-group-items compact">
@@ -121,9 +121,9 @@
 
         <!-- Settings -->
         <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="#">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                         <svg class="nav-icon">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-settings"></use>
                 </svg> Settings
             </a>
             <ul class="nav-group-items compact">

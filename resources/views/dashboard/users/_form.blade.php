@@ -36,4 +36,34 @@
         </div>
         @enderror
     </div>
+@else
+    <div class="mb-3">
+        <label for="password" class="form-label">Password (leave blank to keep current)</label>
+        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+               id="password">
+        @error('password')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+        @enderror
+    </div>
 @endif
+
+<div class="mb-3">
+    <label for="restaurant_id" class="form-label">Restaurant</label>
+    <select name="restaurant_id" class="form-control @error('restaurant_id') is-invalid @enderror"
+           id="restaurant_id" required>
+        <option value="">Select Restaurant</option>
+        @foreach($restaurants as $restaurant)
+        <option value="{{ $restaurant->id }}" 
+                {{ old('restaurant_id', optional($user)->restaurant_id) == $restaurant->id ? 'selected' : '' }}>
+            {{ $restaurant->name }}
+        </option>
+        @endforeach
+    </select>
+    @error('restaurant_id')
+    <div class="invalid-feedback">
+        {{ $message }}
+    </div>
+    @enderror
+</div>
