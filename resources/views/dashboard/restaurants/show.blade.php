@@ -29,12 +29,6 @@
                                         <td>{{ $restaurant->description }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Category</th>
-                                        <td>
-                                            <span class="badge bg-info">{{ $restaurant->category }}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <th>Address</th>
                                         <td>{{ $restaurant->address }}</td>
                                     </tr>

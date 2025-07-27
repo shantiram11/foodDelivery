@@ -18,36 +18,13 @@
             @enderror
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
-                    <select class="form-select @error('category') is-invalid @enderror" id="category" name="category" required>
-                        <option value="">Select Category</option>
-                        <option value="Fast Food" {{ old('category', $restaurant->category ?? '') == 'Fast Food' ? 'selected' : '' }}>Fast Food</option>
-                        <option value="Fine Dining" {{ old('category', $restaurant->category ?? '') == 'Fine Dining' ? 'selected' : '' }}>Fine Dining</option>
-                        <option value="Casual Dining" {{ old('category', $restaurant->category ?? '') == 'Casual Dining' ? 'selected' : '' }}>Casual Dining</option>
-                        <option value="Cafe" {{ old('category', $restaurant->category ?? '') == 'Cafe' ? 'selected' : '' }}>Cafe</option>
-                        <option value="Pizza" {{ old('category', $restaurant->category ?? '') == 'Pizza' ? 'selected' : '' }}>Pizza</option>
-                        <option value="Asian" {{ old('category', $restaurant->category ?? '') == 'Asian' ? 'selected' : '' }}>Asian</option>
-                        <option value="Italian" {{ old('category', $restaurant->category ?? '') == 'Italian' ? 'selected' : '' }}>Italian</option>
-                        <option value="Mexican" {{ old('category', $restaurant->category ?? '') == 'Mexican' ? 'selected' : '' }}>Mexican</option>
-                    </select>
-                    @error('category')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="rating" class="form-label">Rating (1-5)</label>
-                    <input type="number" class="form-control @error('rating') is-invalid @enderror" id="rating" name="rating" 
-                           min="1" max="5" step="0.1" value="{{ old('rating', $restaurant->rating ?? '') }}">
-                    @error('rating')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+        <div class="mb-3">
+            <label for="rating" class="form-label">Rating (1-5)</label>
+            <input type="number" class="form-control @error('rating') is-invalid @enderror" id="rating" name="rating" 
+                   min="1" max="5" step="0.1" value="{{ old('rating', $restaurant->rating ?? '') }}">
+            @error('rating')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
@@ -82,28 +59,7 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="opening_time" class="form-label">Opening Time <span class="text-danger">*</span></label>
-                    <input type="time" class="form-control @error('opening_time') is-invalid @enderror" id="opening_time" name="opening_time" 
-                           value="{{ old('opening_time', isset($restaurant->opening_time) ? $restaurant->opening_time->format('H:i') : '') }}" required>
-                    @error('opening_time')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="closing_time" class="form-label">Closing Time <span class="text-danger">*</span></label>
-                    <input type="time" class="form-control @error('closing_time') is-invalid @enderror" id="closing_time" name="closing_time" 
-                           value="{{ old('closing_time', isset($restaurant->closing_time) ? $restaurant->closing_time->format('H:i') : '') }}" required>
-                    @error('closing_time')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <div class="col-md-4">

@@ -16,7 +16,6 @@ class RestaurantController extends Controller
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('category', 'like', "%{$search}%")
                         ->orWhere('address', 'like', "%{$search}%");
                 });
             }
@@ -32,9 +31,9 @@ class RestaurantController extends Controller
                 return [
                     'id' => $restaurant->id,
                     'name' => $restaurant->name,
-                    'category' => $restaurant->category,
                     'address' => $restaurant->address,
                     'phone' => $restaurant->phone,
+                    'email' => $restaurant->email,
                     'status' => $restaurant->status,
                     'rating' => $restaurant->rating ?? 'N/A',
                     'action' => '
@@ -71,9 +70,6 @@ class RestaurantController extends Controller
             'address' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|email',
-            'category' => 'required|string',
-            'opening_time' => 'required',
-            'closing_time' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -113,9 +109,6 @@ class RestaurantController extends Controller
             'address' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|email',
-            'category' => 'required|string',
-            'opening_time' => 'required',
-            'closing_time' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 

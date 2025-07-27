@@ -17,15 +17,16 @@ class Restaurant extends Model
         'email',
         'image',
         'status',
-        'opening_time',
-        'closing_time',
-        'category',
         'rating'
     ];
 
     protected $casts = [
-        'opening_time' => 'datetime',
-        'closing_time' => 'datetime',
+
         'rating' => 'decimal:1'
     ];
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
 } 

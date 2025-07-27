@@ -14,4 +14,5 @@ class FrontController extends Controller
     {
         return view('frontend.components.sections.proceed-checkout');
     }
+    
 } 

@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('restaurants', function (Blueprint $table) {
+        Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
-            $table->text('address');
-            $table->string('phone');
-            $table->string('email');
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2);
             $table->string('image')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->decimal('rating', 2, 1)->nullable();
+            $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('restaurants');
+        Schema::dropIfExists('menus');
     }
 };

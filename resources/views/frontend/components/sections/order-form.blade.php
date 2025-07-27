@@ -1,3 +1,4 @@
+{{-- 
 <!-- Order Form Section -->
 <section id="order-online" class="book-a-table section">
 
@@ -46,4 +47,5 @@
 
   </div>
 
-</section><!-- /Order Form Section --> 
+</section><!-- /Order Form Section  -->
+--}}

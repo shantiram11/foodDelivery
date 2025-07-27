@@ -48,9 +48,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('restaurants.create')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add Restaurant</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Categories</a>
-                </li>
             </ul>
         </li>
 
@@ -63,16 +60,10 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Items</a>
+                    <a class="nav-link" href="{{route('menus.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Items</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add Item</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Categories</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Specials</a>
+                    <a class="nav-link" href="{{route('menus.create')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add Item</a>
                 </li>
             </ul>
         </li>
@@ -86,16 +77,16 @@
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Orders</a>
+                    <a class="nav-link" href="{{route('orders.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Orders</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Pending</a>
+                    <a class="nav-link" href="{{route('orders.pending')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Pending</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Processing</a>
+                    <a class="nav-link" href="{{route('orders.declined')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Declined</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Completed</a>
+                    <a class="nav-link" href="{{route('orders.completed')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Completed</a>
                 </li>
             </ul>
         </li>
