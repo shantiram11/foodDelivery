@@ -14,7 +14,7 @@
                             <h2 class="card-title">Delivery Details</h2>
                             <button class="btn btn-edit">
                                 <i class="bi bi-pencil me-1"></i>
-                                Edit
+                                <a href="{{ route('profile') }}">Edit</a>
                             </button>
                         </div>
 
@@ -25,7 +25,7 @@
                                         <i class="bi bi-person-circle"></i>
                                     </div>
                                     <div class="info-content">
-                                        <div class="info-title">{{ auth()->user()->name ?? 'Rajesh Sharma' }}</div>
+                                        <div class="info-title">{{ auth()->user()->name}}</div>
                                         <div class="info-subtitle">Customer</div>
                                     </div>
                                 </div>
@@ -36,7 +36,7 @@
                                         <i class="bi bi-telephone"></i>
                                     </div>
                                     <div class="info-content">
-                                        <div class="info-title">+977 9841234567</div>
+                                        <div class="info-title">{{ auth()->user()->phone ?? '9841234567'}}</div>
                                         <div class="info-subtitle">Phone</div>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@
                                         <i class="bi bi-geo-alt"></i>
                                     </div>
                                     <div class="info-content">
-                                        <div class="info-title">Thamel, Kathmandu 44600</div>
+                                        <div class="info-title">{{ auth()->user()->address ?? 'Thamel, Kathmandu 44600'}}</div>
                                         <div class="info-subtitle">Address</div>
                                     </div>
                                 </div>

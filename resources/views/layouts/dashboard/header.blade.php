@@ -5,11 +5,9 @@
                 <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-menu"></use>
             </svg>
         </button>
-        <ul class="header-nav d-none d-lg-flex">
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
-        </ul>
+        <div class="d-flex align-items-center">
+            <h1 class="h3 mb-0">Dashboard</h1>
+        </div>
         <ul class="header-nav ms-auto">
             <li class="nav-item"><a class="nav-link" href="#">
                     <svg class="icon icon-lg">

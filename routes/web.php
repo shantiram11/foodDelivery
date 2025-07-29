@@ -30,6 +30,9 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     // User Roles Management
     Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
 
+
+
+
     // Restaurants Management
     Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
     Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create');
@@ -39,6 +42,7 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::patch('/restaurants/update/{id}', [RestaurantController::class, 'update'])->name('restaurants.update');
     Route::delete('/restaurants/destroy/{id}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
     
+
     // Menus Management
     Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
     Route::get('/menus/create', [MenuController::class, 'create'])->name('menus.create');
