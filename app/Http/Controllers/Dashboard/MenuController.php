@@ -12,30 +12,19 @@ class MenuController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Menu::with('restaurant');
-
-            // Filter by restaurant if specified
-            if ($restaurantId = $request->input('restaurant_id')) {
-                $query->where('restaurant_id', $restaurantId);
-            }
+            $query = Menu::query();
 
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%")
-                        ->orWhereHas('restaurant', function ($rq) use ($search) {
-                            $rq->where('name', 'like', "%{$search}%");
-                        });
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             }
 
             $total = $query->count();
 
-            // Sort by restaurant name first, then by menu name
-            $menus = $query->join('restaurants', 'menus.restaurant_id', '=', 'restaurants.id')
-                ->orderBy('restaurants.name')
-                ->orderBy('menus.name')
-                ->select('menus.*')
+            // Sort by menu name
+            $menus = $query->orderBy('name')
                 ->skip($request->input('start'))
                 ->take($request->input('length'))
                 ->get();
@@ -44,7 +33,6 @@ class MenuController extends Controller
                 return [
                     'id' => $menu->id,
                     'name' => $menu->name,
-                    'restaurant_name' => $menu->restaurant->name,
                     'price' => $menu->price,
                     'description' => $menu->description,
                     'image' => $menu->image,
@@ -67,14 +55,12 @@ class MenuController extends Controller
             ]);
         }
 
-        $restaurants = Restaurant::where('status', 'active')->orderBy('name')->get();
-        return view('dashboard.menus.index', compact('restaurants'));
+        return view('dashboard.menus.index');
     }
 
     public function create()
     {
-        $restaurants = Restaurant::where('status', 'active')->orderBy('name')->get();
-        return view('dashboard.menus.create', compact('restaurants'));
+        return view('dashboard.menus.create');
     }
 
     public function store(Request $request)
@@ -83,11 +69,18 @@ class MenuController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'restaurant_id' => 'required|exists:restaurants,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        // Ensure user belongs to a restaurant
+        if (!auth()->user()->restaurant_id) {
+            return redirect()->back()->withErrors(['error' => 'You must be assigned to a restaurant to create menus.']);
+        }
+
         $data = $request->all();
+        
+        // Automatically set restaurant_id from authenticated user
+        $data['restaurant_id'] = auth()->user()->restaurant_id;
 
         if ($request->hasFile('image')) {
             $imageName = time().'.'.$request->image->extension();
@@ -109,8 +102,7 @@ class MenuController extends Controller
     public function edit($id)
     {
         $menu = Menu::findOrFail($id);
-        $restaurants = Restaurant::where('status', 'active')->orderBy('name')->get();
-        return view('dashboard.menus.edit', compact('menu', 'restaurants'));
+        return view('dashboard.menus.edit', compact('menu'));
     }
 
     public function update(Request $request, $id)
@@ -121,11 +113,18 @@ class MenuController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'restaurant_id' => 'required|exists:restaurants,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        // Ensure user belongs to a restaurant
+        if (!auth()->user()->restaurant_id) {
+            return redirect()->back()->withErrors(['error' => 'You must be assigned to a restaurant to update menus.']);
+        }
+
         $data = $request->all();
+        
+        // Automatically set restaurant_id from authenticated user
+        $data['restaurant_id'] = auth()->user()->restaurant_id;
 
         if ($request->hasFile('image')) {
             // Delete old image if exists

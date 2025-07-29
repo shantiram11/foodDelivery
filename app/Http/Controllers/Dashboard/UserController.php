@@ -84,11 +84,6 @@ class UserController extends Controller
             'restaurant_id' => $request->restaurant_id,
         ];
         
-        // Only update password if provided
-        if ($request->filled('password')) {
-            $updateData['password'] = Hash::make($request->password);
-        }
-        
         $user->update($updateData);
         return redirect()->route('users.index')->with('status', 'user-updated');
     }

@@ -12,124 +12,37 @@
     <div class="row" data-aos="fade-up" data-aos-delay="100">
       <div class="col-lg-12 d-flex justify-content-center">
         <ul class="menu-filters isotope-filters">
-          <li data-filter="*" class="filter-active">All Locations</li>
-          <li data-filter=".filter-downtown">Downtown Branch</li>
-          <li data-filter=".filter-uptown">Uptown Branch</li>
-          <li data-filter=".filter-riverside">Riverside Branch</li>
-          <li data-filter=".filter-mall">Mall Branch</li>
+          <li data-filter="*" class="filter-active">All Restaurants</li>
+          @foreach ($restaurants as $restaurant)
+          <li data-filter=".filter-{{ $restaurant->id }}">{{ $restaurant->name }}</li>
+          @endforeach
         </ul>
       </div>
-    </div><!-- Location Filters -->
+    </div><!-- Restaurant Filters -->
 
     <div class="row isotope-container" data-aos="fade-up" data-aos-delay="200">
 
-      <!-- Downtown Menu Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-downtown">
-        <img src="{{ asset('frontend/img/menu/lobster-bisque.jpg') }}" class="menu-img" alt="">
+      <!-- Menu Items from All Restaurants -->
+      @foreach ($menus as $menu)
+      <div class="col-lg-6 menu-item isotope-item filter-{{ $menu->restaurant->id }}">
+        <img src="{{ asset('uploads/menus/' . $menu->image) }}" class="menu-img" alt="{{ $menu->name }}">
         <div class="menu-content">
-          <a href="#">Downtown Special Bisque</a><span>$8.95</span>
+          <a href="#">{{ $menu->name }}</a><span>${{ number_format($menu->price, 2) }}</span>
         </div>
         <div class="menu-ingredients">
-          Rich tomato base, fresh cream, herbs, garlic croutons
+          {{ $menu->description }}
         </div>
+        <div class="menu-restaurant restaurant-info">
+          <small class="text-white px-3 py-1">From: {{ $menu->restaurant->name }}</small>
+        </div>
+
         <div class="menu-action">
-          <button class="add-to-cart-btn">Add to Cart</button>
+          <button class="add-to-cart-btn" data-menu-id="{{ $menu->id }}" data-restaurant-id="{{ $menu->restaurant->id }}">Add to Cart</button>
         </div>
       </div>
-
-      <!-- Uptown Menu Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-uptown">
-        <img src="{{ asset('frontend/img/menu/bread-barrel.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Uptown Artisan Bread</a><span>$12.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Freshly baked sourdough, focaccia, herb butter, olive tapenade
-        </div>
-        <div class="menu-action">
-          <button class="add-to-cart-btn">Add to Cart</button>
-        </div>
-      </div>
-
-      <!-- Riverside Menu Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-riverside">
-        <img src="{{ asset('frontend/img/menu/tuscan-grilled.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Riverside Grilled Salmon</a><span>$24.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Fresh salmon, herbs, grilled vegetables, lemon butter sauce
-        </div>
-        <div class="menu-action">
-          <button class="add-to-cart-btn">Add to Cart</button>
-        </div>
-      </div>
-
-      <!-- Mall Branch Menu Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-mall">
-        <img src="{{ asset('frontend/img/menu/lobster-roll.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Mall Special Burger</a><span>$18.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Angus beef, aged cheddar, bacon, arugula, truffle fries
-        </div>
-        <div class="menu-action">
-          <button class="add-to-cart-btn">Add to Cart</button>
-        </div>
-      </div>
-
-      <!-- Additional Downtown Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-downtown">
-        <img src="{{ asset('frontend/img/menu/caesar.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Downtown Caesar Salad</a><span>$14.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Crisp romaine, parmesan, house-made croutons, caesar dressing
-        </div>
-        <div class="menu-action">
-          <button class="add-to-cart-btn">Add to Cart</button>
-        </div>
-        </div>
-
-      <!-- Additional Uptown Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-uptown">
-        <img src="{{ asset('frontend/img/menu/cake.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Uptown Special Cake</a><span>$16.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Fresh berries, cream cheese frosting, vanilla sponge
-        </div>
-        <div class="menu-action">
-          <button class="add-to-cart-btn">Add to Cart</button>
-        </div>
-        </div>
-
-      <!-- Additional Riverside Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-riverside">
-        <img src="{{ asset('frontend/img/menu/spinach-salad.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Riverside Fresh Salad</a><span>$15.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Baby spinach, candied walnuts, dried cranberries, goat cheese
-        </div>
-      </div>
-
-      <!-- Additional Mall Items -->
-      <div class="col-lg-6 menu-item isotope-item filter-mall">
-        <img src="{{ asset('frontend/img/menu/mozzarella.jpg') }}" class="menu-img" alt="">
-        <div class="menu-content">
-          <a href="#">Mall Cheese Platter</a><span>$13.95</span>
-        </div>
-        <div class="menu-ingredients">
-          Selection of artisanal cheeses, honey, nuts, fresh fruits
-        </div>
-      </div>
-
+      @endforeach
     </div><!-- Menu Container -->
+    
 
   </div>
 
@@ -154,6 +67,13 @@
   padding: 0.5rem 1rem;
   text-align: right;
 }
+.menu-restaurant {
+  padding: 0.25rem 1rem;
+  font-style: italic;
+}
+.menu-restaurant.hide-restaurant-info {
+  display: none;
+}
 .add-to-cart-btn {
   background-color: var(--accent-color);
   color: var(--contrast-color);
@@ -172,6 +92,28 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Handle filter clicks to show/hide restaurant info
+  const filterButtons = document.querySelectorAll('.menu-filters li');
+  const restaurantInfos = document.querySelectorAll('.restaurant-info');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter');
+      
+      if (filter === '*') {
+        // Show restaurant info for "All Restaurants" filter
+        restaurantInfos.forEach(info => {
+          info.classList.remove('hide-restaurant-info');
+        });
+      } else {
+        // Hide restaurant info for specific restaurant filters
+        restaurantInfos.forEach(info => {
+          info.classList.add('hide-restaurant-info');
+        });
+      }
+    });
+  });
+  
   // Add to cart functionality
   const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
   addToCartButtons.forEach(button => {
@@ -180,7 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const itemName = menuItem.querySelector('.menu-content a').textContent;
       const itemPrice = parseFloat(menuItem.querySelector('.menu-content span').textContent.replace('$', ''));
       const itemImage = menuItem.querySelector('img').src;
-      const itemId = Date.now().toString(); // Generate unique ID for the item
+      const itemId = this.getAttribute('data-menu-id');
+      const restaurantId = this.getAttribute('data-restaurant-id');
       
       // Animation feedback
       this.textContent = 'Added!';
@@ -196,7 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
           id: itemId,
           name: itemName,
           price: itemPrice,
-          image: itemImage
+          image: itemImage,
+          restaurantId: restaurantId
         }
       }));
     });

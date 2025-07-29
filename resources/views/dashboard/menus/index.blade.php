@@ -23,21 +23,12 @@
         @endif
 
         <div class="d-flex align-items-center position-relative my-1 mb-3">
-            <div class="me-3">
-                <select class="form-select w-200px" id="restaurant-filter">
-                    <option value="">All Restaurants</option>
-                    @foreach($restaurants as $restaurant)
-                        <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
-                    @endforeach
-                </select>
-            </div>
             <input type="text" class="form-control table-search form-control-solid w-250px ps-15" placeholder="Search menus..." />
         </div>
 
         <table id="menuDatatable" class="table table-bordered table-striped table-hover align-middle">
             <thead class="bg-light-primary text-dark">
             <tr>
-                <th>Restaurant</th>
                 <th>Menu Name</th>
                 <th>Price</th>
                 <th>Description</th>
@@ -66,14 +57,12 @@
                     type: 'GET',
                     data: function(d) {
                         d._token = CSRF_TOKEN; // if needed for GET (usually not)
-                        d.restaurant_id = $('#restaurant-filter').val(); // Add restaurant filter
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         console.error('AJAX error:', errorThrown);
                     }
                 },
                 columns: [
-                    { data: 'restaurant_name', name: 'restaurant.name' },
                     { data: 'name', name: 'name' },
                     { 
                         data: 'price', 
@@ -104,7 +93,7 @@
                     },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ],
-                order: [[0, 'asc']], // Sort by restaurant name by default
+                order: [[0, 'asc']], // Sort by menu name by default
                 lengthMenu: [[25, 50, 100, 500], [25, 50, 100, 500]],
                 pageLength: 25,
                 language: {
@@ -114,14 +103,9 @@
                 fixedHeader: true,
             });
 
-            // Global search input (your existing input with data-kt-customer-table-filter="search")
+            // Global search input
             $('.table-search').on('keyup', function() {
                 table.search(this.value).draw();
-            });
-
-            // Restaurant filter
-            $('#restaurant-filter').on('change', function() {
-                table.ajax.reload();
             });
         });
 

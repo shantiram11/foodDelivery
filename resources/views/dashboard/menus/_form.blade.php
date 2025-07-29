@@ -18,37 +18,16 @@
             @enderror
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" 
-                               min="0" step="0.01" value="{{ old('price', $menu->price ?? '') }}" required>
-                    </div>
-                    @error('price')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" 
+                       min="0" step="0.01" value="{{ old('price', $menu->price ?? '') }}" required>
             </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="restaurant_id" class="form-label">Restaurant <span class="text-danger">*</span></label>
-                    <select class="form-select @error('restaurant_id') is-invalid @enderror" id="restaurant_id" name="restaurant_id" required>
-                        <option value="">Select Restaurant</option>
-                        @foreach($restaurants as $restaurant)
-                            <option value="{{ $restaurant->id }}" 
-                                {{ old('restaurant_id', $menu->restaurant_id ?? '') == $restaurant->id ? 'selected' : '' }}>
-                                {{ $restaurant->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('restaurant_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+            @error('price')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
     </div>
 

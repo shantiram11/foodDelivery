@@ -21,10 +21,4 @@ class ReportController extends Controller
     {
         return view('dashboard.reports.order');
     }
-
-    public function revenue()
-    {
-        return view('dashboard.reports.revenue');
-    }
-
 }

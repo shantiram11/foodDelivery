@@ -27,7 +27,7 @@
 
 @if(empty($user))
     <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
                id="password" required>
         @error('password')
@@ -35,17 +35,7 @@
             {{ $message }}
         </div>
         @enderror
-    </div>
-@else
-    <div class="mb-3">
-        <label for="password" class="form-label">Password (leave blank to keep current)</label>
-        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-               id="password">
-        @error('password')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-        @enderror
+        <div class="form-text">Password must be at least 8 characters long.</div>
     </div>
 @endif
 
