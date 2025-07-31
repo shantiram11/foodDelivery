@@ -11,95 +11,86 @@
         <div class="btn-group w-100" role="group">
             <button type="button" class="btn btn-option active" data-type="delivery">
                 <i class="bi bi-truck"></i>
-                <span class="ms-2">Delivery</span>
-            </button>
-            <button type="button" class="btn btn-option" data-type="takeaway">
-                <i class="bi bi-bag"></i>
                 <span class="ms-2">Takeaway</span>
             </button>
         </div>
     </div>
 
     <!-- Cart Items -->
-    <div class="cart-items">
-        <!-- Example Cart Item 1 -->
-        <div class="cart-item mb-4 pb-3 border-bottom">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('frontend/img/menu/lobster-bisque.jpg') }}" alt="Lobster Bisque" class="cart-item-img me-3">
-                <div class="cart-item-details flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-start mb-1">
-                        <h5 class="cart-item-title mb-0">Lobster Bisque</h5>
-                        <div class="item-price ms-2">$8.95</div>
-                    </div>
-                    <div class="cart-item-size small text-muted mb-1">Size: Large Bowl</div>
-                    <div class="cart-item-instruction small text-muted mb-2">Instruction: No croutons</div>
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <div class="quantity-controls bg-light">
-                            <button class="btn-quantity" disabled><i class="bi bi-dash"></i></button>
-                            <span class="quantity mx-2">1</span>
-                            <button class="btn-quantity" disabled><i class="bi bi-plus"></i></button>
+    <div class="cart-items" id="cart-items-container">
+        @php
+            $cart = session('cart', []);
+            $subtotal = 0;
+            $itemCount = 0;
+        @endphp
+        
+        @if(count($cart) > 0)
+            @foreach($cart as $key => $item)
+                @php
+                    $subtotal += $item['total_price'];
+                    $itemCount += $item['quantity'];
+                @endphp
+                <div class="cart-item mb-4 pb-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ asset('uploads/menus/' . $item['image']) }}" alt="{{ $item['menu_name'] }}" class="cart-item-img me-3">
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between mb-1">
+                                <h5 class="cart-item-title mb-0">{{ $item['menu_name'] }}</h5>
+                                <div class="item-price">Rs. {{ number_format($item['unit_price'], 2) }}</div>
+                            </div>
+                            <div class="text-muted small mb-2">From: {{ $item['restaurant_name'] }}</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="quantity-controls">
+                                    <form action="{{ route('cart.update') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="menu_id" value="{{ $key }}">
+                                        <input type="hidden" name="quantity" value="{{ max(1, $item['quantity'] - 1) }}">
+                                        <button type="submit" class="btn-quantity" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                    </form>
+                                    <span class="quantity mx-2">{{ $item['quantity'] }}</span>
+                                    <form action="{{ route('cart.update') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="menu_id" value="{{ $key }}">
+                                        <input type="hidden" name="quantity" value="{{ $item['quantity'] + 1 }}">
+                                        <button type="submit" class="btn-quantity">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <form action="{{ route('cart.remove') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="menu_id" value="{{ $key }}">
+                                    <button type="submit" class="btn-remove">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        <button class="btn-remove ms-2" disabled><i class="bi bi-trash3"></i></button>
                     </div>
                 </div>
+            @endforeach
+        @else
+            <div class="empty-cart-message text-center">
+                <i class="bi bi-cart-x"></i>
+                <p>Your cart is empty</p>
             </div>
-        </div>
-        <!-- Example Cart Item 2 -->
-        <div class="cart-item mb-4 pb-3 border-bottom">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('frontend/img/menu/cake.jpg') }}" alt="Chocolate Cake" class="cart-item-img me-3">
-                <div class="cart-item-details flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-start mb-1">
-                        <h5 class="cart-item-title mb-0">Chocolate Cake</h5>
-                        <div class="item-price ms-2">$4.50</div>
-                    </div>
-                    <div class="cart-item-size small text-muted mb-1">Slice</div>
-                    <div class="cart-item-instruction small text-muted mb-2">Instruction: Extra cream</div>
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <div class="quantity-controls bg-light">
-                            <button class="btn-quantity" disabled><i class="bi bi-dash"></i></button>
-                            <span class="quantity mx-2">2</span>
-                            <button class="btn-quantity" disabled><i class="bi bi-plus"></i></button>
-                        </div>
-                        <button class="btn-remove ms-2" disabled><i class="bi bi-trash3"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Example Cart Item 3 -->
-        <div class="cart-item mb-4 pb-3 border-bottom">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('frontend/img/menu/greek-salad.jpg') }}" alt="Greek Salad" class="cart-item-img me-3">
-                <div class="cart-item-details flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-start mb-1">
-                        <h5 class="cart-item-title mb-0">Greek Salad</h5>
-                        <div class="item-price ms-2">$6.00</div>
-                    </div>
-                    <div class="cart-item-size small text-muted mb-1">Size: Regular</div>
-                    <div class="cart-item-instruction small text-muted mb-2">Instruction: Dressing on side</div>
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <div class="quantity-controls bg-light">
-                            <button class="btn-quantity" disabled><i class="bi bi-dash"></i></button>
-                            <span class="quantity mx-2">1</span>
-                            <button class="btn-quantity" disabled><i class="bi bi-plus"></i></button>
-                        </div>
-                        <button class="btn-remove ms-2" disabled><i class="bi bi-trash3"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endif
     </div>
 
     <!-- Cart Footer -->
-    <div class="cart-footer mt-auto pt-3 border-top bg-white">
-        <div class="subtotal d-flex justify-content-between mb-3">
-            <span>Subtotal</span>
-            <span class="subtotal-amount">Rs. 1030</span>
+    @if(count($cart) > 0)
+        <div class="cart-footer mt-auto pt-3 border-top bg-white">
+            <div class="subtotal d-flex justify-content-between mb-3">
+                <span>Subtotal</span>
+                <span class="subtotal-amount">Rs. {{ number_format($subtotal, 2) }}</span>
+            </div>
+            <a href="{{ route('checkout') }}" class="btn-checkout w-100 d-block text-center text-decoration-none">
+                Proceed To Checkout • Rs. {{ number_format($subtotal, 2) }}
+            </a>
         </div>
-        <a href="{{ route('checkout') }}" class="btn-checkout w-100 d-block text-center text-decoration-none">
-            Proceed To Checkout • Rs. 1030
-        </a>
-    </div>
+    @endif
 </div>
 
 <style>
@@ -315,24 +306,11 @@
 </style>
 
 <script>
-function handleCheckout(event) {
-    event.preventDefault();
-    
-    // Close the cart offcanvas
-    const offcanvas = document.querySelector('.offcanvas');
-    if (offcanvas) {
-        const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
-        if (bsOffcanvas) {
-            bsOffcanvas.hide();
-        }
-    }
-    
-    // Scroll to checkout section
-    const checkoutSection = document.querySelector('#checkout');
-    if (checkoutSection) {
-        setTimeout(() => {
-            checkoutSection.scrollIntoView({ behavior: 'smooth' });
-        }, 300); // Small delay to allow offcanvas to close
-    }
-}
-</script> 
+// Global function to reload cart content when items are added from menu
+window.loadCartData = function() {
+    // Simply reload the page to refresh cart content
+    location.reload();
+};
+</script>
+
+ 

@@ -14,7 +14,7 @@
                             <h2 class="card-title">Delivery Details</h2>
                             <button class="btn btn-edit">
                                 <i class="bi bi-pencil me-1"></i>
-                                <a href="{{ route('profile') }}">Edit</a>
+                                <a href="">Edit</a>
                             </button>
                         </div>
 
@@ -115,83 +115,53 @@
                     <div class="card-body p-4">
                         <h2 class="card-title mb-4">Order Summary</h2>
 
-                        <!-- Compact Order Items -->
+                        <!-- Order Items -->
                         <div class="order-items mb-4">
-                            <!-- Chicken Momo -->
-                            <div class="order-item">
-                                <div class="item-image-container">
-                                    <img src="{{ asset('frontend/img/menu/bread-barrel.jpg') }}" alt="Chicken Momo" class="item-image">
-                                    <span class="item-quantity">2</span>
-                                </div>
-                                <div class="item-details">
-                                    <h3 class="item-name">Chicken Momo</h3>
-                                    <p class="item-description">Steamed chicken dumplings</p>
-                                    <div class="item-pricing">
-                                        <span class="item-unit-price">Rs. 180 each</span>
-                                        <span class="item-total-price">Rs. 360</span>
+                            @if(isset($cart) && count($cart) > 0)
+                                @foreach($cart as $item)
+                                    <div class="order-item">
+                                        <div class="item-image-container">
+                                            <img src="{{ asset('uploads/menus/' . $item['image']) }}" alt="{{ $item['menu_name'] }}" class="item-image">
+                                            <span class="item-quantity">{{ $item['quantity'] }}</span>
+                                        </div>
+                                        <div class="item-details">
+                                            <h3 class="item-name">{{ $item['menu_name'] }}</h3>
+                                            <p class="item-description">From: {{ $item['restaurant_name'] }}</p>
+                                            <div class="item-pricing">
+                                                <span class="item-unit-price">Rs. {{ number_format($item['unit_price'], 2) }} each</span>
+                                                <span class="item-total-price">Rs. {{ number_format($item['total_price'], 2) }}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Butter Chicken -->
-                            <div class="order-item">
-                                <div class="item-image-container">
-                                    <img src="{{ asset('frontend/img/menu/bread-barrel.jpg') }}" alt="Butter Chicken" class="item-image">
-                                    <span class="item-quantity">1</span>
-                                </div>
-                                <div class="item-details">
-                                    <h3 class="item-name">Butter Chicken</h3>
-                                    <p class="item-description">Creamy tomato-based curry</p>
-                                    <div class="item-pricing">
-                                        <span class="item-unit-price">Rs. 450 each</span>
-                                        <span class="item-total-price">Rs. 450</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Vegetable Fried Rice -->
-                            <div class="order-item">
-                                <div class="item-image-container">
-                                    <img src="{{ asset('frontend/img/menu/bread-barrel.jpg') }}" alt="Vegetable Fried Rice" class="item-image">
-                                    <span class="item-quantity">1</span>
-                                </div>
-                                <div class="item-details">
-                                    <h3 class="item-name">Vegetable Fried Rice</h3>
-                                    <p class="item-description">Wok-fried mixed vegetables</p>
-                                    <div class="item-pricing">
-                                        <span class="item-unit-price">Rs. 220 each</span>
-                                        <span class="item-total-price">Rs. 220</span>
-                                    </div>
-                                </div>
-                            </div>
+                                @endforeach
+                            @endif
                         </div>
 
-                        <!-- Compact Price Breakdown -->
+                        <!-- Price Breakdown -->
                         <div class="price-breakdown">
                             <div class="price-row">
                                 <span class="price-label">Subtotal</span>
-                                <span class="price-value">Rs. 1030</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Delivery Fee</span>
-                                <span class="price-value">Rs. 50</span>
+                                <span class="price-value">Rs. {{ number_format($subtotal ?? 0, 2) }}</span>
                             </div>
                             <div class="price-row price-total">
                                 <span class="price-label">Total</span>
-                                <span class="price-value total-amount">Rs. 1080</span>
+                                <span class="price-value total-amount">Rs. {{ number_format($total_amount ?? 0, 2) }}</span>
                             </div>
                         </div>
 
-                        <!-- Compact Place Order Button -->
-                        <button class="btn btn-place-order w-100" id="placeOrderBtn">
-                            Place Order • Rs. 1080
-                        </button>
+                        <!-- Order Form and Place Order Button -->
+                        <form action="{{ route('checkout.store') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-place-order w-100">
+                                Place Order • Rs. {{ number_format($total_amount ?? 0, 2) }}
+                            </button>
+                        </form>
 
-                        <!-- Compact Delivery Info -->
+                        <!-- Compact Pickup Info -->
                         <div class="delivery-info-card mt-3">
                             <div class="delivery-info-content">
-                                <i class="bi bi-truck me-2"></i>
-                                <span>Estimated Delivery: 30-45 minutes</span>
+                                <i class="bi bi-bag me-2"></i>
+                                <span>Takeaway - Ready in: 20-30 minutes</span>
                             </div>
                         </div>
 
@@ -721,64 +691,6 @@
 }
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Payment method selection
-    const paymentOptions = document.querySelectorAll('.payment-option');
-    const placeOrderBtn = document.getElementById('placeOrderBtn');
-    
-    paymentOptions.forEach(option => {
-        const input = option.querySelector('input[type="radio"]');
-        const label = option.querySelector('.payment-label');
-        
-        label.addEventListener('click', function() {
-            // Remove selected class from all options
-            paymentOptions.forEach(opt => {
-                opt.classList.remove('selected');
-                const badge = opt.querySelector('.payment-badge');
-                if (badge) badge.remove();
-            });
-            
-            // Add selected class to clicked option
-            option.classList.add('selected');
-            input.checked = true;
-            
-            // Add selected badge
-            const badge = document.createElement('span');
-            badge.className = 'payment-badge badge-selected';
-            badge.textContent = 'Selected';
-            label.appendChild(badge);
-            
-            // Update button text
-            const paymentMethod = input.value;
-            const total = 'Rs. 1080';
-            
-            if (paymentMethod === 'cod') {
-                placeOrderBtn.textContent = `Place Order • ${total}`;
-            } else if (paymentMethod === 'khalti') {
-                placeOrderBtn.textContent = `Pay with Khalti • ${total}`;
-            } else if (paymentMethod === 'esewa') {
-                placeOrderBtn.textContent = `Pay with eSewa • ${total}`;
-            }
-        });
-    });
-    
-    // Place order functionality
-    placeOrderBtn.addEventListener('click', function() {
-        const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
-        
-        if (selectedPayment === 'khalti') {
-            console.log('Processing Khalti payment...');
-            // Add your Khalti integration here
-        } else if (selectedPayment === 'esewa') {
-            console.log('Processing eSewa payment...');
-            // Add your eSewa integration here
-        } else {
-            console.log('Order placed for cash on delivery');
-            // Add your COD processing here
-        }
-    });
-});
-</script>
+
 
 @endsection

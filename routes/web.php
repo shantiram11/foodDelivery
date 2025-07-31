@@ -11,10 +11,23 @@ use App\Http\Controllers\Dashboard\SettingController;
 use App\Http\Controllers\Dashboard\UserRoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Front\FrontController;
+use App\Http\Controllers\Checkout\CartController;
+use App\Http\Controllers\Checkout\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[FrontController::class,'index'])->name('home');
-Route::get('/checkout', [FrontController::class, 'checkout'])->name('checkout');
+
+// Cart and Checkout Routes (require authentication)
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+    
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/order/confirmation/{order}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
+});
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 
@@ -29,8 +42,6 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     
     // User Roles Management
     Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
-
-
 
 
     // Restaurants Management
@@ -71,14 +82,10 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::get('/settings/general', [SettingController::class, 'general'])->name('settings.general');
     Route::get('/settings/appearance', [SettingController::class, 'appearance'])->name('settings.appearance');
     Route::get('/settings/email', [SettingController::class, 'email'])->name('settings.email');
+    
 
     
 
-
-
-
-
-    
 
 
 });

@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Foodymat - Premium Food Delivery')</title>
   <meta name="description" content="@yield('description', 'Order delicious meals from the comfort of your home. Fresh ingredients, fast delivery, and exceptional taste guaranteed.')">
   <meta name="keywords" content="@yield('keywords', 'food delivery, restaurant, online ordering, fresh food, fast delivery')">

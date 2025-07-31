@@ -35,7 +35,6 @@
         <div class="menu-restaurant restaurant-info">
           <small class="text-white px-3 py-1">From: {{ $menu->restaurant->name }}</small>
         </div>
-
         <div class="menu-action">
           <button class="add-to-cart-btn" data-menu-id="{{ $menu->id }}" data-restaurant-id="{{ $menu->restaurant->id }}">Add to Cart</button>
         </div>
@@ -101,12 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const filter = this.getAttribute('data-filter');
       
       if (filter === '*') {
-        // Show restaurant info for "All Restaurants" filter
         restaurantInfos.forEach(info => {
           info.classList.remove('hide-restaurant-info');
         });
       } else {
-        // Hide restaurant info for specific restaurant filters
         restaurantInfos.forEach(info => {
           info.classList.add('hide-restaurant-info');
         });
@@ -114,36 +111,74 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Add to cart functionality
-  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-  addToCartButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const menuItem = this.closest('.menu-item');
-      const itemName = menuItem.querySelector('.menu-content a').textContent;
-      const itemPrice = parseFloat(menuItem.querySelector('.menu-content span').textContent.replace('$', ''));
-      const itemImage = menuItem.querySelector('img').src;
-      const itemId = this.getAttribute('data-menu-id');
-      const restaurantId = this.getAttribute('data-restaurant-id');
+  // Add to Cart functionality
+  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
       
-      // Animation feedback
-      this.textContent = 'Added!';
-      this.style.backgroundColor = '#28a745';
-      setTimeout(() => {
-        this.textContent = 'Add to Cart';
-        this.style.backgroundColor = '';
-      }, 1000);
+      const menuId = this.getAttribute('data-menu-id');
+      const originalText = this.textContent;
       
-      // Dispatch cart event
-      window.dispatchEvent(new CustomEvent('addToCart', {
-        detail: {
-          id: itemId,
-          name: itemName,
-          price: itemPrice,
-          image: itemImage,
-          restaurantId: restaurantId
+      // Show loading state
+      this.textContent = 'Adding...';
+      this.disabled = true;
+      
+      const formData = new FormData();
+      formData.append('menu_id', menuId);
+      formData.append('quantity', 1);
+      formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+      
+      fetch('{{ route("cart.add") }}', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Show success
+          this.textContent = 'Added!';
+          this.style.backgroundColor = '#28a745';
+          
+          // Update cart if open
+          if (typeof window.loadCartData === 'function') {
+            window.loadCartData();
+          }
+          
+          // Reset button
+          setTimeout(() => {
+            this.textContent = originalText;
+            this.style.backgroundColor = '';
+            this.disabled = false;
+          }, 1000);
+        } else {
+          // Show error message for restaurant validation
+          showMessage(data.message || 'Error adding to cart', 'error');
+          
+          this.textContent = originalText;
+          this.disabled = false;
         }
-      }));
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this.textContent = originalText;
+        this.disabled = false;
+      });
     });
   });
+  
+  // Simple message function
+  function showMessage(message, type) {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+    alert.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 350px;';
+    alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    
+    document.body.appendChild(alert);
+    
+    setTimeout(() => {
+      if (alert.parentNode) alert.remove();
+    }, 4000);
+  }
 });
 </script> 
