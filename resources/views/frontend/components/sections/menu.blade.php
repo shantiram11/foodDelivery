@@ -32,8 +32,8 @@
         <div class="menu-ingredients">
           {{ $menu->description }}
         </div>
-        <div class="menu-restaurant restaurant-info">
-          <small class="text-white px-3 py-1">From: {{ $menu->restaurant->name }}</small>
+        <div class="menu-ingredients text-white"
+          <small class="text-white">{{$menu->restaurant->name }} Restaurant</small>
         </div>
         <div class="menu-action">
           <button class="add-to-cart-btn" data-menu-id="{{ $menu->id }}" data-restaurant-id="{{ $menu->restaurant->id }}">Add to Cart</button>
@@ -41,11 +41,10 @@
       </div>
       @endforeach
     </div><!-- Menu Container -->
-    
 
   </div>
 
-</section><!-- /Menu Section --> 
+</section><!-- /Menu Section -->
 
 <style>
 .section-title {
@@ -91,94 +90,142 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Handle filter clicks to show/hide restaurant info
-  const filterButtons = document.querySelectorAll('.menu-filters li');
-  const restaurantInfos = document.querySelectorAll('.restaurant-info');
-  
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const filter = this.getAttribute('data-filter');
-      
-      if (filter === '*') {
-        restaurantInfos.forEach(info => {
-          info.classList.remove('hide-restaurant-info');
-        });
-      } else {
-        restaurantInfos.forEach(info => {
-          info.classList.add('hide-restaurant-info');
-        });
-      }
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    // Enhanced event delegation for add to cart buttons
+    document.addEventListener('click', function(e) {
+        // Check if clicked element or its parent is an add-to-cart button
+        const btn = e.target.closest('.add-to-cart-btn');
+        if (!btn) return;
+
+        // Prevent all default behaviors and event bubbling
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        const menuId = btn.dataset.menuId;
+        if (!menuId) return;
+
+        // Prevent multiple clicks
+        if (btn.disabled) return;
+
+        addToCart(btn, menuId);
     });
-  });
-  
-  // Add to Cart functionality
-  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      const menuId = this.getAttribute('data-menu-id');
-      const originalText = this.textContent;
-      
-      // Show loading state
-      this.textContent = 'Adding...';
-      this.disabled = true;
-      
-      const formData = new FormData();
-      formData.append('menu_id', menuId);
-      formData.append('quantity', 1);
-      formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-      
-      fetch('{{ route("cart.add") }}', {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Show success
-          this.textContent = 'Added!';
-          this.style.backgroundColor = '#28a745';
-          
-          // Update cart if open
-          if (typeof window.loadCartData === 'function') {
-            window.loadCartData();
-          }
-          
-          // Reset button
-          setTimeout(() => {
-            this.textContent = originalText;
-            this.style.backgroundColor = '';
-            this.disabled = false;
-          }, 1000);
-        } else {
-          // Show error message for restaurant validation
-          showMessage(data.message || 'Error adding to cart', 'error');
-          
-          this.textContent = originalText;
-          this.disabled = false;
+
+    // Add to cart function
+    async function addToCart(btn, menuId) {
+        const originalText = btn.textContent;
+        const originalBg = btn.style.backgroundColor;
+
+        // Show loading state immediately
+        btn.textContent = 'Adding...';
+        btn.disabled = true;
+        btn.style.pointerEvents = 'none'; // Prevent any clicking
+        btn.style.opacity = '0.7';
+
+        try {
+            const formData = new FormData();
+            formData.append('menu_id', menuId);
+            formData.append('quantity', 1);
+            formData.append('_token', csrfToken);
+
+            const response = await fetch('{{ route("cart.add") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Success state
+                btn.textContent = 'Added!';
+                btn.style.backgroundColor = '#28a745';
+                btn.style.color = '#fff';
+
+                // Show success message
+                showMessage(data.message || 'Item added to cart!', 'success');
+
+                // Update cart counter in header
+                updateHeaderCartCount(data.cart_count);
+
+                // Refresh cart sidebar if it exists
+                if (window.refreshCartSidebar) {
+                    window.refreshCartSidebar();
+                }
+
+                // Reset button after delay
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.backgroundColor = originalBg;
+                    btn.style.color = '';
+                    btn.style.opacity = '';
+                    btn.style.pointerEvents = '';
+                    btn.disabled = false;
+                }, 2000);
+            } else {
+                throw new Error(data.message || 'Failed to add item to cart');
+            }
+        } catch (error) {
+            console.error('Add to cart error:', error);
+            showMessage(error.message || 'Failed to add item to cart', 'error');
+
+            // Reset button immediately on error
+            btn.textContent = originalText;
+            btn.style.backgroundColor = originalBg;
+            btn.style.color = '';
+            btn.style.opacity = '';
+            btn.style.pointerEvents = '';
+            btn.disabled = false;
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        this.textContent = originalText;
-        this.disabled = false;
-      });
-    });
-  });
-  
-  // Simple message function
-  function showMessage(message, type) {
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
-    alert.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 350px;';
-    alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-    
-    document.body.appendChild(alert);
-    
-    setTimeout(() => {
-      if (alert.parentNode) alert.remove();
-    }, 4000);
-  }
+    }
+
+    // Show message function
+    function showMessage(message, type) {
+        // Remove existing alerts
+        const existingAlerts = document.querySelectorAll('.cart-alert');
+        existingAlerts.forEach(alert => alert.remove());
+
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed cart-alert`;
+        alert.style.cssText = 'top:100px;right:20px;z-index:9999;min-width:250px;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+        alert.innerHTML = `<i class="bi bi-${type === 'success' ? 'check-circle' : 'x-circle'} me-2"></i>${message}`;
+
+        document.body.appendChild(alert);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }
+        }, 3000);
+    }
+
+    // Update header cart count
+    function updateHeaderCartCount(count) {
+        const cartCountElements = document.querySelectorAll('.cart-count, .cart-counter, .cart-badge');
+        cartCountElements.forEach(element => {
+            if (element) {
+                element.textContent = count || 0;
+                element.style.display = (count && count > 0) ? 'flex' : 'none';
+            }
+        });
+
+        // Dispatch custom event for other components
+        window.dispatchEvent(new CustomEvent('cartCountUpdated', {
+            detail: { count: count || 0 }
+        }));
+    }
+
+    // Global function for other scripts to update cart count
+    window.updateCartCount = updateHeaderCartCount;
 });
-</script> 
+</script>

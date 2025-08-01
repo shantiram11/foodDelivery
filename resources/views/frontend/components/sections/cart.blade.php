@@ -23,7 +23,7 @@
             $subtotal = 0;
             $itemCount = 0;
         @endphp
-        
+
         @if(count($cart) > 0)
             @foreach($cart as $key => $item)
                 @php
@@ -41,31 +41,22 @@
                             <div class="text-muted small mb-2">From: {{ $item['restaurant_name'] }}</div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="quantity-controls">
-                                    <form action="{{ route('cart.update') }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <input type="hidden" name="menu_id" value="{{ $key }}">
-                                        <input type="hidden" name="quantity" value="{{ max(1, $item['quantity'] - 1) }}">
-                                        <button type="submit" class="btn-quantity" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+                                    <button class="btn-quantity quantity-decrease"
+                                            data-menu-id="{{ $key }}"
+                                            data-quantity="{{ max(1, $item['quantity'] - 1) }}"
+                                            {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
                                             <i class="bi bi-dash"></i>
                                         </button>
-                                    </form>
-                                    <span class="quantity mx-2">{{ $item['quantity'] }}</span>
-                                    <form action="{{ route('cart.update') }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <input type="hidden" name="menu_id" value="{{ $key }}">
-                                        <input type="hidden" name="quantity" value="{{ $item['quantity'] + 1 }}">
-                                        <button type="submit" class="btn-quantity">
+                                    <span class="quantity mx-2" id="qty-{{ $key }}">{{ $item['quantity'] }}</span>
+                                    <button class="btn-quantity quantity-increase"
+                                            data-menu-id="{{ $key }}"
+                                            data-quantity="{{ $item['quantity'] + 1 }}">
                                             <i class="bi bi-plus"></i>
                                         </button>
-                                    </form>
                                 </div>
-                                <form action="{{ route('cart.remove') }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <input type="hidden" name="menu_id" value="{{ $key }}">
-                                    <button type="submit" class="btn-remove">
+                                <button class="btn-remove cart-remove-btn" data-menu-id="{{ $key }}">
                                         <i class="bi bi-trash3"></i>
                                     </button>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -306,11 +297,169 @@
 </style>
 
 <script>
-// Global function to reload cart content when items are added from menu
-window.loadCartData = function() {
-    // Simply reload the page to refresh cart content
-    location.reload();
-};
-</script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const cartContainer = document.getElementById('cart-items-container');
 
- 
+    // Handle all cart actions with event delegation
+    cartContainer?.addEventListener('click', async function(e) {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        e.preventDefault();
+        const menuId = btn.dataset.menuId;
+        if (!menuId || btn.disabled) return;
+
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+
+        try {
+            let url, formData = new FormData();
+            formData.append('menu_id', menuId);
+            formData.append('_token', csrfToken);
+
+            if (btn.classList.contains('quantity-decrease') || btn.classList.contains('quantity-increase')) {
+                formData.append('quantity', btn.dataset.quantity);
+                url = '{{ route("cart.update") }}';
+            } else if (btn.classList.contains('cart-remove-btn')) {
+                url = '{{ route("cart.remove") }}';
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                if (btn.classList.contains('cart-remove-btn')) {
+                    // Animate item removal
+                    const cartItem = btn.closest('.cart-item');
+                    cartItem.style.transition = 'all 0.3s ease';
+                    cartItem.style.opacity = '0';
+                    setTimeout(() => cartItem.remove(), 300);
+                }
+
+                // Update footer and header
+                updateCartFooter(data.cart_total);
+                if (window.updateHeaderCartCount) {
+                    window.updateHeaderCartCount(data.cart_count || 0);
+                }
+
+                // Check if cart is empty
+                if (data.cart_empty) showEmptyCart();
+
+                showMessage(data.message);
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            showMessage(error.message || 'Operation failed', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.style.opacity = '';
+        }
+    });
+
+    // Simplified cart refresh
+    async function refreshCartDisplay() {
+        try {
+            const response = await fetch('{{ route("cart.data") }}', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                if (!data.cart_items || Object.keys(data.cart_items).length === 0) {
+                    showEmptyCart();
+                } else {
+                    updateCartItems(data.cart_items);
+                    updateCartFooter(data.cart_total);
+                }
+
+                if (window.updateHeaderCartCount) {
+                    window.updateHeaderCartCount(data.cart_count || 0);
+                }
+            }
+        } catch (error) {
+            console.error('Cart refresh failed:', error);
+        }
+    }
+
+    // Update cart items HTML
+    function updateCartItems(items) {
+        cartContainer.innerHTML = Object.entries(items).map(([key, item]) => `
+            <div class="cart-item mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-center">
+                    <img src="{{ asset('uploads/menus/') }}/${item.image}" alt="${item.menu_name}" class="cart-item-img me-3">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between mb-1">
+                            <h5 class="cart-item-title mb-0">${item.menu_name}</h5>
+                            <div class="item-price">Rs. ${parseFloat(item.unit_price).toFixed(2)}</div>
+                        </div>
+                        <div class="text-muted small mb-2">From: ${item.restaurant_name}</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="quantity-controls">
+                                <button class="btn-quantity quantity-decrease" data-menu-id="${key}" data-quantity="${Math.max(1, item.quantity - 1)}" ${item.quantity <= 1 ? 'disabled' : ''}>
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <span class="quantity mx-2">${item.quantity}</span>
+                                <button class="btn-quantity quantity-increase" data-menu-id="${key}" data-quantity="${parseInt(item.quantity) + 1}">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                            <button class="btn-remove cart-remove-btn" data-menu-id="${key}">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Update cart footer
+    function updateCartFooter(total = 0) {
+        const cartSection = document.getElementById('cartSection');
+        if (!cartSection) return;
+
+        cartSection.querySelector('.cart-footer')?.remove();
+        if (total > 0) {
+            cartSection.insertAdjacentHTML('beforeend', `
+                <div class="cart-footer mt-auto pt-3 border-top bg-white">
+                    <div class="subtotal d-flex justify-content-between mb-3">
+                        <span>Subtotal</span>
+                        <span class="subtotal-amount">Rs. ${parseFloat(total).toFixed(2)}</span>
+                    </div>
+                    <a href="{{ route('checkout') }}" class="btn-checkout w-100 d-block text-center text-decoration-none">
+                        Proceed To Checkout • Rs. ${parseFloat(total).toFixed(2)}
+                    </a>
+                </div>
+            `);
+        }
+    }
+
+    // Show empty cart
+    function showEmptyCart() {
+        cartContainer.innerHTML = '<div class="empty-cart-message text-center"><i class="bi bi-cart-x"></i><p>Your cart is empty</p></div>';
+        document.getElementById('cartSection')?.querySelector('.cart-footer')?.remove();
+    }
+
+    // Simple message display
+    function showMessage(message, type = 'success') {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+        alert.style.cssText = 'top:20px;right:20px;z-index:9999;';
+        alert.textContent = message;
+        document.body.appendChild(alert);
+        setTimeout(() => alert.remove(), 3000);
+    }
+
+    // Global functions
+    window.refreshCartSidebar = refreshCartDisplay;
+
+    // Auto-refresh on cart open
+    document.getElementById('cartOffcanvas')?.addEventListener('show.bs.offcanvas', refreshCartDisplay);
+});
+</script>

@@ -23,10 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
-    
+    Route::get('/cart/data', [CartController::class, 'getCartData'])->name('cart.data');
+
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/order/confirmation/{order}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
+    Route::get('/orders/confirmation/{order?}', [CheckoutController::class, 'confirmationUnified'])->name('order.confirmation');
 });
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
@@ -39,7 +40,7 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::get('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-    
+
     // User Roles Management
     Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
 
@@ -52,7 +53,7 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::get('/restaurants/edit/{id}', [RestaurantController::class, 'edit'])->name('restaurants.edit');
     Route::patch('/restaurants/update/{id}', [RestaurantController::class, 'update'])->name('restaurants.update');
     Route::delete('/restaurants/destroy/{id}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
-    
+
 
     // Menus Management
     Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
@@ -82,9 +83,9 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::get('/settings/general', [SettingController::class, 'general'])->name('settings.general');
     Route::get('/settings/appearance', [SettingController::class, 'appearance'])->name('settings.appearance');
     Route::get('/settings/email', [SettingController::class, 'email'])->name('settings.email');
-    
 
-    
+
+
 
 
 

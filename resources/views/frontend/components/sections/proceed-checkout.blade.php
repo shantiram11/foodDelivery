@@ -150,9 +150,10 @@
                         </div>
 
                         <!-- Order Form and Place Order Button -->
-                        <form action="{{ route('checkout.store') }}" method="POST">
+                        <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
                             @csrf
-                            <button type="submit" class="btn btn-place-order w-100">
+                            <input type="hidden" name="payment_method" id="selectedPaymentMethod" value="cod">
+                            <button type="submit" class="btn btn-place-order w-100" id="placeOrderBtn">
                                 Place Order • Rs. {{ number_format($total_amount ?? 0, 2) }}
                             </button>
                         </form>
@@ -662,11 +663,11 @@
     .info-card {
         margin-bottom: 8px;
     }
-    
+
     .payment-methods {
         gap: 8px;
     }
-    
+
     .order-items {
         gap: 8px;
     }
@@ -689,8 +690,71 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #a1a1a1;
 }
+
+/* Loading state */
+.btn-place-order:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-place-order.loading {
+    background: linear-gradient(135deg, #6b7280, #9ca3af) !important;
+}
 </style>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentOptions = document.querySelectorAll('.payment-option');
+    const paymentMethodInput = document.getElementById('selectedPaymentMethod');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
 
+    // Handle payment method selection
+    paymentOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            paymentOptions.forEach(opt => {
+                opt.classList.remove('selected');
+                const badge = opt.querySelector('.payment-badge');
+                if (badge) badge.style.display = 'none';
+            });
+
+            // Add selected class to clicked option
+            this.classList.add('selected');
+
+            // Show selected badge
+            const selectedBadge = this.querySelector('.payment-badge');
+            if (selectedBadge) {
+                selectedBadge.style.display = 'inline-block';
+                selectedBadge.textContent = 'Selected';
+            }
+
+            // Update hidden input
+            const paymentMethod = this.dataset.payment;
+            paymentMethodInput.value = paymentMethod;
+
+            // Update radio button
+            const radioBtn = this.querySelector('input[type="radio"]');
+            if (radioBtn) radioBtn.checked = true;
+        });
+    });
+
+    // Handle form submission
+    checkoutForm.addEventListener('submit', function(e) {
+        // Show loading state
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.classList.add('loading');
+        placeOrderBtn.textContent = 'Processing Order...';
+    });
+
+    // Initialize payment badges visibility
+    paymentOptions.forEach(option => {
+        const badge = option.querySelector('.payment-badge');
+        if (badge && !option.classList.contains('selected')) {
+            badge.style.display = 'none';
+        }
+    });
+});
+</script>
 
 @endsection

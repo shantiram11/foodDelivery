@@ -1,157 +1,157 @@
 @extends('layouts.frontend-master')
 
 @section('content')
-<div class="min-h-screen" style="background: linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%); margin-top: 80px;">
-    <div class="container py-5">
+<div class="d-flex align-items-center" style="background: #fafbfc; margin-top: 80px; min-height: 60vh; padding: 2rem 0;">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card modern-card">
-                    <div class="card-body text-center p-5">
-                        <!-- Success Icon -->
-                        <div class="success-icon mb-4">
-                            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                        </div>
-                        
-                        <h2 class="text-success mb-4">Order Confirmed!</h2>
-                        <p class="lead mb-4">Thank you for your order. We're preparing it now!</p>
-                        
-                        <!-- Order Details Card -->
-                        <div class="order-details-card bg-light p-4 rounded mb-4">
-                            <div class="row text-start">
-                                <div class="col-md-6">
-                                    <h5 class="mb-3">Order Information</h5>
-                                    <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
-                                    <p><strong>Restaurant:</strong> {{ $order->restaurant->name }}</p>
-                                    <p><strong>Status:</strong> <span class="badge bg-warning">{{ ucfirst($order->status) }}</span></p>
-                                    <p><strong>Payment:</strong> Cash on Delivery</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 class="mb-3">Customer Details</h5>
-                                    <p><strong>Name:</strong> {{ $order->user->name }}</p>
-                                    <p><strong>Phone:</strong> {{ $order->customer_phone }}</p>
-                                    <p><strong>Order Type:</strong> Takeaway</p>
-                                    <p><strong>Estimated Ready Time:</strong> 20-30 minutes</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Order Items -->
-                        <div class="order-items-card bg-white border rounded p-4 mb-4">
-                            <h5 class="text-start mb-3">Items Ordered</h5>
-                            <div class="table-responsive">
-                                <table class="table table-borderless">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($order->orderItems as $item)
-                                        <tr>
-                                            <td class="text-start">{{ $item->menu_name }}</td>
-                                            <td>{{ $item->quantity }}</td>
-                                            <td>Rs. {{ number_format($item->unit_price, 2) }}</td>
-                                            <td><strong>Rs. {{ number_format($item->total_price, 2) }}</strong></td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot class="table-light">
-                                        <tr>
-                                            <th colspan="3" class="text-end">Total Amount:</th>
-                                            <th class="text-success">Rs. {{ number_format($order->total_amount, 2) }}</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                        
-                        <!-- Action Buttons -->
-                        <div class="action-buttons">
-                            <a href="{{ route('home') }}" class="btn btn-primary me-3">
-                                <i class="bi bi-house me-2"></i>Back to Home
-                            </a>
-                            <button onclick="window.print()" class="btn btn-outline-secondary">
-                                <i class="bi bi-printer me-2"></i>Print Receipt
-                            </button>
-                        </div>
-                        
-                        <!-- Additional Info -->
-                        <div class="additional-info mt-4 p-3 bg-info bg-opacity-10 rounded">
-                            <p class="mb-1"><strong>Important:</strong></p>
-                            <p class="mb-0 small">Please arrive at the restaurant within the estimated time. Have your order number ready for pickup.</p>
-                        </div>
+            <div class="col-md-5 col-lg-4">
+
+                                <div class="clean-card text-center">
+
+                    <!-- Success Icon -->
+                    <div class="success-icon mb-3">
+                        <i class="bi bi-check-circle-fill text-success"></i>
                     </div>
+
+                    {{-- Check if we have single order or multiple orders --}}
+                    @if(isset($order))
+                        {{-- SINGLE ORDER DISPLAY --}}
+                        <!-- Success Message -->
+                        <h2 class="mb-2 text-black">Order Placed Successfully!</h2>
+                        <p class="text-muted mb-4">Thank you for your order</p>
+
+                        <!-- Single Order Info -->
+                        <div class="order-info mb-4">
+                            <div class="mb-2">
+                                <span class="order-id">{{ $order->order_number }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">Restaurant</small>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">{{ $order->restaurant->name }}</small>
+                            </div>
+                            <div class="total-price">Rs. {{ number_format($order->total_amount, 2) }}</div>
+                        </div>
+
+                    @elseif(isset($orders))
+                        {{-- MULTIPLE ORDERS DISPLAY --}}
+                        <!-- Success Message -->
+                        <h2 class="mb-2 text-black">Orders Placed Successfully!</h2>
+                        <p class="text-muted mb-4">Thank you for your orders</p>
+
+                        <!-- Multiple Orders Summary -->
+                        <div class="order-info mb-4">
+                            <div class="mb-2">
+                                <small class="text-muted">{{ count($orders) }} Orders Placed</small>
+                            </div>
+                            <div class="total-price mb-3">Rs. {{ number_format($orders->sum('total_amount'), 2) }}</div>
+                        </div>
+
+                        <!-- Individual Orders List -->
+                        <div class="orders-list mb-4">
+                            @foreach($orders as $singleOrder)
+                                <div class="order-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="text-start">
+                                            <div class="order-id-small">{{ $singleOrder->order_number }}</div>
+                                            <small class="text-muted">{{ $singleOrder->restaurant->name }}</small>
+                                        </div>
+                                        <div class="order-amount">Rs. {{ number_format($singleOrder->total_amount, 2) }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <!-- Action Button -->
+                    <a href="{{ route('home') }}" class="btn btn-success">
+                        Continue Shopping
+                    </a>
+
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 
 <style>
-/* Modern Card Design */
-.modern-card {
-    border: 0;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
+/* Main card styling */
+.clean-card {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 350px;
+    margin: 0 auto;
 }
 
-.success-icon {
-    animation: bounceIn 0.6s ease-out;
+/* Success icon */
+.success-icon i {
+    font-size: 3rem;
 }
 
-@keyframes bounceIn {
-    0% {
-        transform: scale(0.3);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    70% {
-        transform: scale(0.9);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+/* Order info container */
+.order-info {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
 }
 
-.order-details-card {
-    border: 1px solid #e9ecef;
+/* Single order ID styling */
+.order-id {
+    font-family: 'Courier New', monospace;
+    background: #e9ecef;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #495057;
 }
 
-.order-items-card {
-    border: 1px solid #e9ecef;
+/* Price display */
+.total-price {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #28a745;
 }
 
-.action-buttons .btn {
-    min-width: 150px;
+/* Multiple orders list styling */
+.orders-list {
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
 }
 
-@media print {
-    .action-buttons {
-        display: none !important;
-    }
-    
-    .modern-card {
-        box-shadow: none !important;
-        border: 1px solid #000 !important;
-    }
+.order-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
+.order-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Small order ID for multiple orders */
+.order-id-small {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Individual order amount */
+.order-amount {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* Mobile responsive */
 @media (max-width: 768px) {
-    .action-buttons .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .action-buttons .me-3 {
-        margin-right: 0 !important;
+    .clean-card {
+        margin: 1rem;
+        padding: 1.5rem;
     }
 }
 </style>

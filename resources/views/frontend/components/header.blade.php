@@ -67,7 +67,7 @@
                 </li>
               </ul>
             </div>
-            
+
             <!-- Hidden Logout Form -->
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               @csrf
@@ -86,7 +86,7 @@
 
     </div>
   </div>
-</header> 
+</header>
 
 <!-- Cart Offcanvas -->
 <div class="offcanvas offcanvas-end cart-offcanvas" tabindex="-1" id="cartOffcanvas">
@@ -370,20 +370,43 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize cart count
-  updateCartCount();
+  // Update cart count display
+  function updateCartCount(count = 0) {
+    document.querySelectorAll('.cart-count, .cart-counter, .cart-badge').forEach(el => {
+      el.textContent = count;
+      el.style.display = count > 0 ? 'flex' : 'none';
+      el.classList.toggle('d-none', count <= 0);
+    });
+  }
 
-  // Listen for cart updates
-  window.addEventListener('cartUpdated', function() {
-    updateCartCount();
-  });
-
-  function updateCartCount() {
-    const cartItems = document.querySelectorAll('.cart-item');
-    const cartCount = document.querySelector('.cart-count');
-    if (cartCount) {
-      cartCount.textContent = cartItems.length;
+  // Load cart count from server
+  async function loadCartCount() {
+    try {
+      const response = await fetch('{{ route("cart.data") }}', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      const data = await response.json();
+      if (data.success) updateCartCount(data.cart_count);
+    } catch (error) {
+      console.log('Cart count load failed:', error);
+      updateCartCount(document.querySelectorAll('.cart-item').length);
     }
   }
+
+  // Event listeners
+  window.addEventListener('cartCountUpdated', (e) => updateCartCount(e.detail.count));
+  window.addEventListener('cartUpdated', loadCartCount);
+
+  // Cart button handler
+  document.querySelector('[data-bs-target="#cartOffcanvas"]')?.addEventListener('click', () => {
+    window.refreshCartSidebar?.();
+  });
+
+  // Global functions
+  window.updateHeaderCartCount = updateCartCount;
+  window.refreshHeaderCartCount = loadCartCount;
+
+  // Initialize
+  loadCartCount();
 });
-</script> 
+</script>
