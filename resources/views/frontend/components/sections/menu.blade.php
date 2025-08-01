@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             if (alert.parentNode) {
                 alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 300);
+                setTimeout(() => alert.remove(), 200);
             }
         }, 3000);
     }
