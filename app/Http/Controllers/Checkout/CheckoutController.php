@@ -54,6 +54,7 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
+
             // Group cart items by restaurant
             $itemsByRestaurant = collect($cart)->groupBy('restaurant_id');
             $orderIds = [];
@@ -67,12 +68,12 @@ class CheckoutController extends Controller
                     'user_id' => Auth::id(),
                     'restaurant_id' => $restaurantId,
                     'order_number' => Order::generateOrderNumber(),
-                    'status' => 'pending',
+                    'status' => 'confirmed',
                     'payment_method' => $request->input('payment_method', 'cod'),
                     'payment_status' => 'pending',
                     'subtotal' => $restaurantTotal,
                     'total_amount' => $restaurantTotal,
-                    'customer_phone' => auth()->user()->phone ?? '000-000-0000'
+                    'customer_phone' => $request->input('customer_phone', auth()->user()->phone ?? '9841234567')
                 ]);
 
                 $orderIds[] = $order->id;
@@ -116,14 +117,21 @@ class CheckoutController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
+            // Log the error
+            \Log::error('Checkout failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => Auth::id()
+            ]);
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to place order. Please try again.'
+                    'message' => 'Failed to place order: ' . $e->getMessage()
                 ], 500);
             }
 
-            return redirect()->back()->with('error', 'Failed to place order. Please try again.');
+            return redirect()->back()->with('error', 'Failed to place order: ' . $e->getMessage());
         }
     }
 

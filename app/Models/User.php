@@ -81,4 +81,37 @@ class User extends Authenticatable
     {
         return $this->isAdmin() || $this->isRestaurantUser();
     }
+
+    public function canViewAllRestaurants()
+    {
+        return $this->isAdmin();
+    }
+
+    public function getRestaurantScope()
+    {
+        if ($this->isAdmin()) {
+            return null; // Can see all restaurants
+        }
+
+        if ($this->isRestaurantUser()) {
+            return $this->restaurant_id;
+        }
+
+        return null;
+    }
+
+    public function scopeForCurrentUser($query)
+    {
+        $user = auth()->user();
+
+        if ($user->isAdmin()) {
+            return $query; // No filtering for admin
+        }
+
+        if ($user->isRestaurantUser()) {
+            return $query->where('restaurant_id', $user->restaurant_id);
+        }
+
+        return $query;
+    }
 }

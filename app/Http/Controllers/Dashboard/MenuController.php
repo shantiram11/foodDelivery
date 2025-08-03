@@ -14,6 +14,12 @@ class MenuController extends Controller
         if ($request->ajax()) {
             $query = Menu::query();
 
+            // Apply restaurant filtering for restaurant users
+            $currentUser = auth()->user();
+            if ($currentUser->isRestaurantUser()) {
+                $query->where('restaurant_id', $currentUser->restaurant_id);
+            }
+
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -78,7 +84,7 @@ class MenuController extends Controller
         }
 
         $data = $request->all();
-        
+
         // Automatically set restaurant_id from authenticated user
         $data['restaurant_id'] = auth()->user()->restaurant_id;
 
@@ -96,12 +102,26 @@ class MenuController extends Controller
     public function show($id)
     {
         $menu = Menu::with('restaurant')->findOrFail($id);
+        $currentUser = auth()->user();
+
+        // Check if restaurant user is trying to view a menu from another restaurant
+        if ($currentUser->isRestaurantUser() && $menu->restaurant_id !== $currentUser->restaurant_id) {
+            abort(403, 'Unauthorized access');
+        }
+
         return view('dashboard.menus.show', compact('menu'));
     }
 
     public function edit($id)
     {
         $menu = Menu::findOrFail($id);
+        $currentUser = auth()->user();
+
+        // Check if restaurant user is trying to edit a menu from another restaurant
+        if ($currentUser->isRestaurantUser() && $menu->restaurant_id !== $currentUser->restaurant_id) {
+            abort(403, 'Unauthorized access');
+        }
+
         return view('dashboard.menus.edit', compact('menu'));
     }
 
@@ -122,7 +142,7 @@ class MenuController extends Controller
         }
 
         $data = $request->all();
-        
+
         // Automatically set restaurant_id from authenticated user
         $data['restaurant_id'] = auth()->user()->restaurant_id;
 

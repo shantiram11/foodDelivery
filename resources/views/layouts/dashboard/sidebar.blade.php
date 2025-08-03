@@ -31,7 +31,8 @@
             </ul>
         </li>
 
-        <!-- Restaurant Management -->
+        <!-- Restaurant Management - Only for Admin -->
+        @if(auth()->user()->isAdmin())
         <li class="nav-group">
             <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
@@ -47,6 +48,7 @@
                 </li>
             </ul>
         </li>
+        @endif
 
         <!-- Menu Management -->
         <li class="nav-group">
@@ -88,7 +90,7 @@
             </ul>
         </li>
 
-        
+
 
         <!-- Reviews & Ratings -->
         <li class="nav-item">

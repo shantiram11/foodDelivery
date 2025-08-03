@@ -308,7 +308,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         e.preventDefault();
         const menuId = btn.dataset.menuId;
-        if (!menuId || btn.disabled) return;
+        if (!menuId || btn.disabled) {
+            console.log('Button click ignored:', { menuId, disabled: btn.disabled, btn });
+            return;
+        }
+
+        console.log('Cart button clicked:', {
+            menuId,
+            classes: btn.className,
+            quantity: btn.dataset.quantity
+        });
 
         btn.disabled = true;
         btn.style.opacity = '0.6';
@@ -319,19 +328,36 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('_token', csrfToken);
 
             if (btn.classList.contains('quantity-decrease') || btn.classList.contains('quantity-increase')) {
-                formData.append('quantity', btn.dataset.quantity);
+                const newQuantity = parseInt(btn.dataset.quantity);
+                formData.append('quantity', newQuantity);
                 url = '{{ route("cart.update") }}';
+
+                // Update quantity display immediately for better UX
+                if (btn.classList.contains('quantity-increase')) {
+                    const qtySpan = btn.parentElement.querySelector('.quantity');
+                    if (qtySpan) {
+                        qtySpan.textContent = newQuantity;
+                    }
+                } else if (btn.classList.contains('quantity-decrease')) {
+                    const qtySpan = btn.parentElement.querySelector('.quantity');
+                    if (qtySpan) {
+                        qtySpan.textContent = newQuantity;
+                    }
+                }
             } else if (btn.classList.contains('cart-remove-btn')) {
                 url = '{{ route("cart.remove") }}';
             }
 
+            console.log('Sending request to:', url);
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData,
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
 
+            console.log('Response status:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
             if (data.success) {
                 if (btn.classList.contains('cart-remove-btn')) {
                     // Animate item removal
@@ -339,6 +365,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     cartItem.style.transition = 'all 0.3s ease';
                     cartItem.style.opacity = '0';
                     setTimeout(() => cartItem.remove(), 300);
+                } else if (btn.classList.contains('quantity-increase') || btn.classList.contains('quantity-decrease')) {
+                    // Update quantity controls after successful update
+                    const quantityControls = btn.closest('.quantity-controls');
+                    const currentQty = parseInt(quantityControls.querySelector('.quantity').textContent);
+
+                    // Update decrease button state
+                    const decreaseBtn = quantityControls.querySelector('.quantity-decrease');
+                    if (decreaseBtn) {
+                        decreaseBtn.disabled = currentQty <= 1;
+                        decreaseBtn.dataset.quantity = Math.max(1, currentQty - 1);
+                    }
+
+                    // Update increase button
+                    const increaseBtn = quantityControls.querySelector('.quantity-increase');
+                    if (increaseBtn) {
+                        increaseBtn.dataset.quantity = currentQty + 1;
+                    }
                 }
 
                 // Update footer and header
@@ -352,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 showMessage(data.message);
             } else {
-                throw new Error(data.message);
+                throw new Error(data.message || 'Operation failed');
             }
         } catch (error) {
             showMessage(error.message || 'Operation failed', 'error');

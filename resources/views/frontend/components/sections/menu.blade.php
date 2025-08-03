@@ -27,7 +27,7 @@
       <div class="col-lg-6 menu-item isotope-item filter-{{ $menu->restaurant->id }}">
         <img src="{{ asset('uploads/menus/' . $menu->image) }}" class="menu-img" alt="{{ $menu->name }}">
         <div class="menu-content">
-          <a href="#">{{ $menu->name }}</a><span>${{ number_format($menu->price, 2) }}</span>
+          <a href="#">{{ $menu->name }}</a><span>RS.{{ number_format($menu->price, 2) }}</span>
         </div>
         <div class="menu-ingredients">
           {{ $menu->description }}
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                showMessage('You need to login to add items to cart');
             }
 
             const data = await response.json();

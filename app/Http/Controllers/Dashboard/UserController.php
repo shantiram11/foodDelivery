@@ -18,6 +18,12 @@ class UserController extends Controller
         if ($request->ajax()) {
             $query = User::query();
 
+            // Apply restaurant filtering for restaurant users
+            $currentUser = auth()->user();
+            if ($currentUser->isRestaurantUser()) {
+                $query->where('restaurant_id', $currentUser->restaurant_id);
+            }
+
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -56,38 +62,90 @@ class UserController extends Controller
     }
 
     public function create(){
-        $restaurants = Restaurant::all();
+        $currentUser = auth()->user();
+
+        if ($currentUser->isAdmin()) {
+            $restaurants = Restaurant::all();
+        } else {
+            // Restaurant users can only assign users to their own restaurant
+            $restaurants = Restaurant::where('id', $currentUser->restaurant_id)->get();
+        }
+
         return view('dashboard.users.create', compact('restaurants'));
     }
     public function store(UserRequest $request){
-        $user = User::create([
+        $currentUser = auth()->user();
+
+        // Restrict role selection for restaurant users
+        if ($currentUser->isRestaurantUser() && $request->role !== 'restaurant_user') {
+            return redirect()->back()->withErrors(['role' => 'You can only create restaurant users.']);
+        }
+
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
-            'restaurant_id' => $request->restaurant_id,
-//            'role' => 'user',
+            'role' => $request->role,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
-        ]);
+        ];
+
+        // Set restaurant_id based on user role and current user permissions
+        if ($currentUser->isAdmin()) {
+            $userData['restaurant_id'] = $request->restaurant_id;
+        } else {
+            // Restaurant users can only assign to their own restaurant
+            $userData['restaurant_id'] = $currentUser->restaurant_id;
+        }
+
+        $user = User::create($userData);
         return redirect()->route('users.index')->with('status', 'user-created');
     }
     public function edit($id){
         $user = User::find($id);
-        $restaurants = Restaurant::all();
+        $currentUser = auth()->user();
+
+        // Check if restaurant user is trying to edit a user from another restaurant
+        if ($currentUser->isRestaurantUser() && $user->restaurant_id !== $currentUser->restaurant_id) {
+            abort(403, 'Unauthorized access');
+        }
+
+        if ($currentUser->isAdmin()) {
+            $restaurants = Restaurant::all();
+        } else {
+            // Restaurant users can only assign users to their own restaurant
+            $restaurants = Restaurant::where('id', $currentUser->restaurant_id)->get();
+        }
+
         return view('dashboard.users.edit',compact('user', 'restaurants'));
     }
 
-    public function update(Request $request, $id){
+        public function update(Request $request, $id){
         $user = User::find($id);
+        $currentUser = auth()->user();
+
+        // Restrict role selection for restaurant users
+        if ($currentUser->isRestaurantUser() && $request->role !== 'restaurant_user') {
+            return redirect()->back()->withErrors(['role' => 'You can only assign restaurant user role.']);
+        }
+
         $updateData = [
             'name' => $request->name,
             'email' => $request->email,
-            'restaurant_id' => $request->restaurant_id,
+            'role' => $request->role,
         ];
-        
+
+        // Set restaurant_id based on user role and current user permissions
+        if ($currentUser->isAdmin()) {
+            $updateData['restaurant_id'] = $request->restaurant_id;
+        } else {
+            // Restaurant users can only assign to their own restaurant
+            $updateData['restaurant_id'] = $currentUser->restaurant_id;
+        }
+
         $user->update($updateData);
         return redirect()->route('users.index')->with('status', 'user-updated');
     }
-    
+
     public function destroy($id){
         $user = User::find($id);
         if($user) {

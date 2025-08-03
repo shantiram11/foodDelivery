@@ -40,12 +40,34 @@
 @endif
 
 <div class="mb-3">
+    <label for="role" class="form-label">Role</label>
+    <select name="role" class="form-control @error('role') is-invalid @enderror"
+           id="role" required onchange="toggleRestaurantField()">
+        <option value="">Select Role</option>
+        @foreach(\App\Http\Constants\UserRoleConstant::LIST as $roleKey => $roleData)
+            @if(auth()->user()->isAdmin() || $roleKey === 'restaurant_user')
+            <option value="{{ $roleKey }}"
+                    {{ old('role', optional($user)->role) == $roleKey ? 'selected' : '' }}>
+                {{ $roleData['label'] }}
+            </option>
+            @endif
+        @endforeach
+    </select>
+    @error('role')
+    <div class="invalid-feedback">
+        {{ $message }}
+    </div>
+    @enderror
+</div>
+
+@if(auth()->user()->isAdmin())
+<div class="mb-3" id="restaurant-field" style="display: none;">
     <label for="restaurant_id" class="form-label">Restaurant</label>
     <select name="restaurant_id" class="form-control @error('restaurant_id') is-invalid @enderror"
-           id="restaurant_id" required>
+           id="restaurant_id">
         <option value="">Select Restaurant</option>
         @foreach($restaurants as $restaurant)
-        <option value="{{ $restaurant->id }}" 
+        <option value="{{ $restaurant->id }}"
                 {{ old('restaurant_id', optional($user)->restaurant_id) == $restaurant->id ? 'selected' : '' }}>
             {{ $restaurant->name }}
         </option>
@@ -57,3 +79,26 @@
     </div>
     @enderror
 </div>
+@endif
+
+<script>
+function toggleRestaurantField() {
+    const roleSelect = document.getElementById('role');
+    const restaurantField = document.getElementById('restaurant-field');
+    const restaurantSelect = document.getElementById('restaurant_id');
+
+    if (roleSelect.value === 'restaurant_user') {
+        restaurantField.style.display = 'block';
+        restaurantSelect.required = true;
+    } else {
+        restaurantField.style.display = 'none';
+        restaurantSelect.required = false;
+        restaurantSelect.value = '';
+    }
+}
+
+// Call on page load to set initial state
+document.addEventListener('DOMContentLoaded', function() {
+    toggleRestaurantField();
+});
+</script>
