@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Constants\UserRoleConstant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
         'restaurant_id',
     ];
 
@@ -58,5 +60,25 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === UserRoleConstant::ADMIN;
+    }
+
+    public function isCustomer()
+    {
+        return $this->role === UserRoleConstant::CUSTOMER;
+    }
+
+    public function isRestaurantUser()
+    {
+        return $this->role === UserRoleConstant::RESTAURANT_USER;
+    }
+
+    public function shouldAccessDashboard()
+    {
+        return $this->isAdmin() || $this->isRestaurantUser();
     }
 }

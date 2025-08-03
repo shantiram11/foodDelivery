@@ -14,6 +14,8 @@ use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Checkout\CartController;
 use App\Http\Controllers\Checkout\CheckoutController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\RequireDashboardAccess;
+
 
 Route::get('/',[FrontController::class,'index'])->name('home');
 
@@ -30,9 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/confirmation/{order?}', [CheckoutController::class, 'confirmationUnified'])->name('order.confirmation');
 });
 
-Route::middleware(['auth', 'verified'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'verified', 'dashboard.access'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 
-Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function () {
+Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard')->group(function () {
     // Users Management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -83,9 +85,6 @@ Route::middleware(['auth', 'verified'])->prefix('/dashboard')->group(function ()
     Route::get('/settings/general', [SettingController::class, 'general'])->name('settings.general');
     Route::get('/settings/appearance', [SettingController::class, 'appearance'])->name('settings.appearance');
     Route::get('/settings/email', [SettingController::class, 'email'])->name('settings.email');
-
-
-
 
 
 
