@@ -48,6 +48,9 @@
     <script src="{{ asset('js/config.js') }}"></script>
     <script src="{{ asset('js/color-modes.js') }}"></script>
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- ChartJS Styles -->
     <link href="{{ asset('vendors/@coreui/chartjs/css/coreui-chartjs.css') }}" rel="stylesheet">
     <link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet"/>

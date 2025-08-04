@@ -92,6 +92,21 @@
 
 
 
+        <!-- Contact Messages -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('contacts.index')}}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-envelope-open"></use>
+                </svg> Contact Messages
+                @php
+                    $newContactsCount = \App\Models\Contact::where('status', 'new')->count();
+                @endphp
+                @if($newContactsCount > 0)
+                    <span class="badge badge-sm bg-danger ms-auto">{{ $newContactsCount }}</span>
+                @endif
+            </a>
+        </li>
+
         <!-- Reviews & Ratings -->
         <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)">

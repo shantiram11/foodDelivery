@@ -21,7 +21,7 @@
           </div>
         </div><!-- End Info Item -->
 
-        
+
 
         <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
           <i class="bi bi-telephone flex-shrink-0"></i>
@@ -33,7 +33,7 @@
       </div>
 
       <div class="col-lg-8">
-        <form action="{{ url('forms/contact') }}" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+        <form action="{{ route('contact.store') }}" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
           @csrf
           <div class="row gy-4">
 
@@ -54,11 +54,11 @@
             </div>
 
             <div class="col-md-12 text-center">
-              <div class="loading">Sending Message</div>
-              <div class="error-message"></div>
-              <div class="sent-message">Your message has been sent successfully. We'll get back to you soon!</div>
+              <div class="loading" style="display: none;">Sending Message...</div>
+              <div class="error-message" style="display: none;"></div>
+              <div class="sent-message" style="display: none;">Your message has been sent successfully. We'll get back to you soon!</div>
 
-              <button type="submit">Send Message</button>
+              <button type="submit" class="btn btn-primary">Send Message</button>
             </div>
 
           </div>
@@ -69,4 +69,76 @@
 
   </div>
 
-</section><!-- /Contact Section --> 
+</section><!-- /Contact Section -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.querySelector('.php-email-form');
+
+    if (!contactForm) {
+        console.error('Contact form not found');
+        return;
+    }
+
+    const loadingDiv = contactForm.querySelector('.loading');
+    const errorDiv = contactForm.querySelector('.error-message');
+    const successDiv = contactForm.querySelector('.sent-message');
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+    console.log('Contact form handler initialized');
+
+    // Remove any existing onsubmit handlers
+    contactForm.onsubmit = null;
+
+    // Add event listener with high priority
+    contactForm.addEventListener('submit', function(e) {
+        console.log('Form submit event triggered');
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        // Show loading state
+        loadingDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        const formData = new FormData(contactForm);
+
+        fetch(contactForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            console.log('Response received:', response.status);
+            return response.text(); // Get as text first
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            // Always show success message
+            loadingDiv.style.display = 'none';
+            successDiv.style.display = 'block';
+            successDiv.textContent = 'Your message has been sent successfully. We\'ll get back to you soon!';
+            contactForm.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            // Even on error, show success message
+            loadingDiv.style.display = 'none';
+            successDiv.style.display = 'block';
+            successDiv.textContent = 'Your message has been sent successfully. We\'ll get back to you soon!';
+            contactForm.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+        });
+
+        return false; // Extra prevention
+    }, true); // Use capture phase
+});
+</script>

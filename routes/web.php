@@ -8,16 +8,21 @@ use App\Http\Controllers\Dashboard\ReservationController;
 use App\Http\Controllers\Dashboard\ReviewController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\SettingController;
-use App\Http\Controllers\Dashboard\UserRoleController;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Checkout\CartController;
 use App\Http\Controllers\Checkout\CheckoutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Dashboard\ContactController as DashboardContactController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RequireDashboardAccess;
 
 
 Route::get('/',[FrontController::class,'index'])->name('home');
+
+// Contact Form Routes
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Cart and Checkout Routes (require authentication)
 Route::middleware('auth')->group(function () {
@@ -43,8 +48,7 @@ Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard'
     Route::patch('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::get('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    // User Roles Management
-    Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
+
 
 
     // Restaurants Management
@@ -86,7 +90,11 @@ Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard'
     Route::get('/settings/appearance', [SettingController::class, 'appearance'])->name('settings.appearance');
     Route::get('/settings/email', [SettingController::class, 'email'])->name('settings.email');
 
-
+    // Contact Management
+    Route::get('/contacts', [DashboardContactController::class, 'index'])->name('contacts.index');
+    Route::get('/contacts/{id}', [DashboardContactController::class, 'show'])->name('contacts.show');
+    Route::get('/contacts/{id}/reply', [DashboardContactController::class, 'reply'])->name('contacts.reply');
+    Route::delete('/contacts/{id}', [DashboardContactController::class, 'destroy'])->name('contacts.destroy');
 
 });
 Route::middleware('auth')->group(function () {
