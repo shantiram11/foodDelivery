@@ -77,9 +77,14 @@ class User extends Authenticatable
         return $this->role === UserRoleConstant::RESTAURANT_USER;
     }
 
+    public function isDeliveryStaff()
+    {
+        return $this->role === UserRoleConstant::DELIVERY_STAFF;
+    }
+
     public function shouldAccessDashboard()
     {
-        return $this->isAdmin() || $this->isRestaurantUser();
+        return $this->isAdmin() || $this->isRestaurantUser() || $this->isDeliveryStaff();
     }
 
     public function canViewAllRestaurants()
@@ -93,7 +98,7 @@ class User extends Authenticatable
             return null; // Can see all restaurants
         }
 
-        if ($this->isRestaurantUser()) {
+        if ($this->isRestaurantUser() || $this->isDeliveryStaff()) {
             return $this->restaurant_id;
         }
 
@@ -108,7 +113,7 @@ class User extends Authenticatable
             return $query; // No filtering for admin
         }
 
-        if ($user->isRestaurantUser()) {
+        if ($user->isRestaurantUser() || $user->isDeliveryStaff()) {
             return $query->where('restaurant_id', $user->restaurant_id);
         }
 

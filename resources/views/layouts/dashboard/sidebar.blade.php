@@ -117,24 +117,14 @@
         </li>
 
         <!-- Reports -->
-        <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('reports.index')}}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-chart-line"></use>
                 </svg> Reports
             </a>
-            <ul class="nav-group-items compact">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('reports.sales')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Sales Report</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('reports.orders')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Order Report</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('reports.revenue')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Revenue Report</a>
-                </li>
-            </ul>
         </li>
+
 
         <!-- Settings -->
         <li class="nav-group">

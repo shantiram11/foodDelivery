@@ -18,7 +18,8 @@ class Order extends Model
         'payment_status',
         'subtotal',
         'total_amount',
-        'customer_phone'
+        'customer_phone',
+        'delivery_staff_id'
     ];
 
     protected $casts = [
@@ -39,6 +40,11 @@ class Order extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function deliveryStaff()
+    {
+        return $this->belongsTo(User::class, 'delivery_staff_id');
     }
 
     public static function generateOrderNumber()

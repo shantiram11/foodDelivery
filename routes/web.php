@@ -76,6 +76,9 @@ Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard'
     Route::get('/orders/pending', [OrderController::class, 'pending'])->name('orders.pending');
     Route::get('/orders/declined', [OrderController::class, 'declined'])->name('orders.declined');
     Route::get('/orders/completed', [OrderController::class, 'completed'])->name('orders.completed');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::post('/orders/{id}/assign-delivery-staff', [OrderController::class, 'assignDeliveryStaff'])->name('orders.assign-delivery-staff');
 
 
     // reports
@@ -83,6 +86,11 @@ Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard'
     Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
     Route::get('/reports/orders', [ReportController::class, 'orders'])->name('reports.orders');
     Route::get('/reports/revenue', [ReportController::class, 'revenue'])->name('reports.revenue');
+
+    // Export routes
+    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
+    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
+    Route::get('/reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
 
     // settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

@@ -45,7 +45,7 @@
            id="role" required onchange="toggleRestaurantField()">
         <option value="">Select Role</option>
         @foreach(\App\Http\Constants\UserRoleConstant::LIST as $roleKey => $roleData)
-            @if(auth()->user()->isAdmin() || $roleKey === 'restaurant_user')
+            @if(auth()->user()->isAdmin() || in_array($roleKey, ['restaurant_user', 'delivery_staff']))
             <option value="{{ $roleKey }}"
                     {{ old('role', optional($user)->role) == $roleKey ? 'selected' : '' }}>
                 {{ $roleData['label'] }}
@@ -87,7 +87,7 @@ function toggleRestaurantField() {
     const restaurantField = document.getElementById('restaurant-field');
     const restaurantSelect = document.getElementById('restaurant_id');
 
-    if (roleSelect.value === 'restaurant_user') {
+    if (roleSelect.value === 'restaurant_user' || roleSelect.value === 'delivery_staff') {
         restaurantField.style.display = 'block';
         restaurantSelect.required = true;
     } else {

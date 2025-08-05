@@ -8,6 +8,7 @@ use App\Models\Menu;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -23,7 +24,13 @@ class DashboardController extends Controller
             'recent_orders' => $this->getRecentOrders($user),
         ];
 
-        return view('dashboard.dashboard', compact('stats'));
+        // Get chart data
+        $chartData = [
+            'orderTrend' => $this->getOrderTrendData($user),
+            'orderStatus' => $this->getOrderStatusData($user),
+        ];
+
+        return view('dashboard.dashboard', compact('stats', 'chartData'));
     }
 
     private function getTotalUsers($user)
@@ -94,4 +101,74 @@ class DashboardController extends Controller
 
         return collect();
     }
+
+    private function getOrderTrendData($user)
+    {
+        $endDate = Carbon::now();
+        $startDate = Carbon::now()->subDays(13); // Last 14 days for better trend visualization
+
+        $query = Order::whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($user->isRestaurantUser() || $user->isDeliveryStaff()) {
+            $query->where('restaurant_id', $user->restaurant_id);
+        }
+
+        $orders = $query->get();
+
+        // Group by date
+        $orderTrend = [];
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $dayOrders = $orders->filter(function($order) use ($date) {
+                return $order->created_at->format('Y-m-d') === $date->format('Y-m-d');
+            });
+
+            // Group by status for this day
+            $statusCounts = $dayOrders->groupBy('status')->map(function($orders) {
+                return $orders->count();
+            });
+
+            $orderTrend[$date->format('M d')] = [
+                'total_orders' => $dayOrders->count(),
+                'completed' => $statusCounts['completed'] ?? 0,
+                'pending' => $statusCounts['pending'] ?? 0,
+                'confirmed' => $statusCounts['confirmed'] ?? 0,
+                'preparing' => $statusCounts['preparing'] ?? 0,
+                'cancelled' => $statusCounts['cancelled'] ?? 0,
+            ];
+        }
+
+        return $orderTrend;
+    }
+
+    private function getOrderStatusData($user)
+    {
+        $query = Order::query();
+
+        if ($user->isRestaurantUser() || $user->isDeliveryStaff()) {
+            $query->where('restaurant_id', $user->restaurant_id);
+        }
+
+        $orders = $query->get();
+
+        $statusData = $orders->groupBy('status')->map(function($orders, $status) {
+            return [
+                'status' => $status,
+                'count' => $orders->count(),
+                'percentage' => 0 // Will be calculated in view
+            ];
+        });
+
+        // Calculate percentages
+        $total = $orders->count();
+        if ($total > 0) {
+            $statusData = $statusData->map(function($data) use ($total) {
+                $data['percentage'] = round(($data['count'] / $total) * 100, 1);
+                return $data;
+            });
+        }
+
+        return $statusData;
+    }
+
+
 }

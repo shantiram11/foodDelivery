@@ -77,8 +77,8 @@ class UserController extends Controller
         $currentUser = auth()->user();
 
         // Restrict role selection for restaurant users
-        if ($currentUser->isRestaurantUser() && $request->role !== 'restaurant_user') {
-            return redirect()->back()->withErrors(['role' => 'You can only create restaurant users.']);
+        if ($currentUser->isRestaurantUser() && !in_array($request->role, ['restaurant_user', 'delivery_staff'])) {
+            return redirect()->back()->withErrors(['role' => 'You can only create restaurant users and delivery staff.']);
         }
 
         $userData = [
@@ -119,13 +119,13 @@ class UserController extends Controller
         return view('dashboard.users.edit',compact('user', 'restaurants'));
     }
 
-        public function update(Request $request, $id){
+        public function update(UserRequest $request, $id){
         $user = User::find($id);
         $currentUser = auth()->user();
 
         // Restrict role selection for restaurant users
-        if ($currentUser->isRestaurantUser() && $request->role !== 'restaurant_user') {
-            return redirect()->back()->withErrors(['role' => 'You can only assign restaurant user role.']);
+        if ($currentUser->isRestaurantUser() && !in_array($request->role, ['restaurant_user', 'delivery_staff'])) {
+            return redirect()->back()->withErrors(['role' => 'You can only assign restaurant user or delivery staff roles.']);
         }
 
         $updateData = [
@@ -133,6 +133,11 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $request->role,
         ];
+
+        // Only update password if provided
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
 
         // Set restaurant_id based on user role and current user permissions
         if ($currentUser->isAdmin()) {

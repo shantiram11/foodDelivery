@@ -55,10 +55,14 @@
     <link href="{{ asset('vendors/@coreui/chartjs/css/coreui-chartjs.css') }}" rel="stylesheet">
     <link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet"/>
 
+    <!-- CoreUI Icons SVG Sprite -->
+    <script src="{{ asset('vendors/@coreui/icons/js/svgxuse.min.js') }}"></script>
+
 </head>
 
 <body>
 @include('layouts.dashboard.sidebar')
+
 
 <div class="wrapper d-flex flex-column min-vh-100">
     @include('layouts.dashboard.header')
