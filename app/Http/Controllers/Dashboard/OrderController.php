@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DeliveryAssignmentMail;
 use App\Models\Order;
 use App\Models\User;
 use App\Http\Constants\UserRoleConstant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -131,15 +133,41 @@ class OrderController extends Controller
         $order->delivery_staff_id = $request->delivery_staff_id;
         $order->save();
 
+        // Send email notification to customer
+        try {
+            // Check if user has email
+            if (!$order->user->email) {
+                \Log::warning('Cannot send email: User has no email address', [
+                    'order_id' => $order->id,
+                    'user_id' => $order->user->id
+                ]);
+            } else {
+                Mail::to($order->user->email)->send(new DeliveryAssignmentMail($order, $deliveryStaff));
+                \Log::info('Delivery assignment email sent successfully', [
+                    'order_id' => $order->id,
+                    'user_email' => $order->user->email,
+                    'delivery_staff' => $deliveryStaff->name
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Log the error but don't fail the assignment
+            \Log::error('Failed to send delivery assignment email: ' . $e->getMessage(), [
+                'order_id' => $order->id,
+                'user_email' => $order->user->email ?? 'no email',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Delivery staff assigned successfully!',
+                'message' => 'Delivery staff assigned successfully! Email notification sent to customer.',
                 'staff_name' => $deliveryStaff->name
             ]);
         }
 
-        return redirect()->back()->with('success', 'Delivery staff assigned successfully!');
+        return redirect()->back()->with('success', 'Delivery staff assigned successfully! Email notification sent to customer.');
     }
 
     private function getOrdersDataTable(Request $request, $statuses = null)
