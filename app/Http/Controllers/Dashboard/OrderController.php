@@ -224,7 +224,7 @@ class OrderController extends Controller
                 'customer' => $order->user ? $order->user->name : 'Guest',
                 'restaurant' => $order->restaurant ? $order->restaurant->name : 'N/A',
                 'items_count' => $order->orderItems->count(),
-                'total_amount' => '$' . number_format($order->total_amount, 2),
+                'total_amount' => 'Rs.' . number_format($order->total_amount, 2),
                 'delivery_staff' => $order->deliveryStaff ? $order->deliveryStaff->name : '<span class="text-muted">Not Assigned</span>',
                 'status' => $statusBadge,
                 'created_at' => $order->created_at->format('M d, Y H:i'),

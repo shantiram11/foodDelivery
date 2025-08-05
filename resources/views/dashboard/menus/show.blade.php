@@ -31,7 +31,7 @@
                                     <tr>
                                         <th>Price</th>
                                         <td>
-                                            <span class="h5 text-success">${{ number_format($menu->price, 2) }}</span>
+                                            <span class="h5 text-success">RS.{{ number_format($menu->price, 2) }}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -66,8 +66,8 @@
                                 @if($menu->image)
                                     <div class="mb-3">
                                         <h5>Menu Image</h5>
-                                        <img src="{{ asset('uploads/menus/' . $menu->image) }}" 
-                                             alt="{{ $menu->name }}" 
+                                        <img src="{{ asset('uploads/menus/' . $menu->image) }}"
+                                             alt="{{ $menu->name }}"
                                              class="img-fluid rounded shadow">
                                     </div>
                                 @else
@@ -86,4 +86,4 @@
             </div>
         </div>
     </div>
-@endsection 
+@endsection

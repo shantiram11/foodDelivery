@@ -64,24 +64,24 @@
                 },
                 columns: [
                     { data: 'name', name: 'name' },
-                    { 
-                        data: 'price', 
+                    {
+                        data: 'price',
                         name: 'price',
                         render: function(data, type, row) {
-                            return '$' + parseFloat(data).toFixed(2);
+                            return 'RS.' + parseFloat(data).toFixed(2);
                         }
                     },
-                    { 
-                        data: 'description', 
+                    {
+                        data: 'description',
                         name: 'description',
                         render: function(data, type, row) {
                             return data ? (data.length > 50 ? data.substring(0, 50) + '...' : data) : '';
                         }
                     },
-                    { 
-                        data: 'image', 
-                        name: 'image', 
-                        orderable: false, 
+                    {
+                        data: 'image',
+                        name: 'image',
+                        orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
                             if (data) {
@@ -110,4 +110,4 @@
         });
 
     </script>
-@endpush 
+@endpush
