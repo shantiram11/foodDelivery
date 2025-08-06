@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard'
     Route::get('/orders/completed', [OrderController::class, 'completed'])->name('orders.completed');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::post('/orders/{id}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status');
     Route::post('/orders/{id}/assign-delivery-staff', [OrderController::class, 'assignDeliveryStaff'])->name('orders.assign-delivery-staff');
 
 
@@ -109,6 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/orders/{orderId}/cancel', [ProfileController::class, 'cancelOrder'])->name('profile.orders.cancel');
 });
 
 require __DIR__.'/auth.php';

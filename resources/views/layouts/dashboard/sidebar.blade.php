@@ -124,28 +124,6 @@
                 </svg> Reports
             </a>
         </li>
-
-
-        <!-- Settings -->
-        <li class="nav-group">
-            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
-                        <svg class="nav-icon">
-                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-settings"></use>
-                </svg> Settings
-            </a>
-            <ul class="nav-group-items compact">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('settings.general')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> General</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('settings.appearance')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Appearance</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('settings.email')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Email</a>
-                </li>
-            </ul>
-        </li>
-
     </ul>
 
 </div>

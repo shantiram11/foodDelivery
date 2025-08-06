@@ -123,7 +123,7 @@
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </td>
-                                            <td>${{ number_format($order->total_amount, 2) }}</td>
+                                            <td>RS.{{ number_format($order->total_amount, 2) }}</td>
                                             <td>{{ $order->created_at->format('M d, Y') }}</td>
                                         </tr>
                                         @endforeach

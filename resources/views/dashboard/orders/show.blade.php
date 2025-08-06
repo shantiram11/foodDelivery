@@ -133,10 +133,33 @@
                             <small class="text-muted">Payment Method</small>
                             <p class="mb-0">{{ ucfirst($order->payment_method ?? 'N/A') }}</p>
                         </div>
-                        <div>
+                        <div class="mb-3">
                             <small class="text-muted">Payment Status</small>
-                            <p class="mb-0">{{ ucfirst($order->payment_status ?? 'N/A') }}</p>
+                            <div id="current-payment-status" class="mt-2">
+                                @switch($order->payment_status)
+                                    @case('pending')
+                                        <span class="badge bg-warning">Pending</span>
+                                        @break
+                                    @case('paid')
+                                        <span class="badge bg-success">Paid</span>
+                                        @break
+                                    @default
+                                        <span class="badge bg-secondary">N/A</span>
+                                @endswitch
+                            </div>
                         </div>
+
+                        @if(!auth()->user()->isDeliveryStaff() && $order->payment_method === 'cod' && $order->payment_status === 'pending')
+                            <div class="mt-3">
+                                <small class="text-muted d-block mb-2">COD Payment Collection</small>
+                                <div class="d-grid gap-2" id="payment-status-buttons">
+                                    <button class="btn btn-success btn-sm update-payment-status" data-id="{{ $order->id }}" data-payment-status="paid">
+                                        <i class="bi bi-cash-coin me-1"></i>Mark as Paid
+                                    </button>
+                                </div>
+                                <small class="text-muted mt-1">Click when payment is collected on delivery</small>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -425,6 +448,54 @@
                     },
                     error: function(xhr) {
                         let errorMessage = 'An error occurred while updating the order status.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        alert('Error: ' + errorMessage);
+                    },
+                    complete: function() {
+                        // Re-enable button and restore original content
+                        button.prop('disabled', false);
+                        button.html(originalHtml);
+                    }
+                });
+            });
+
+            // Handle payment status update buttons (using event delegation)
+            $(document).on('click', '.update-payment-status', function() {
+                const orderId = $(this).data('id');
+                const newPaymentStatus = $(this).data('payment-status');
+                const button = $(this);
+
+                // Disable button and show loading
+                button.prop('disabled', true);
+                const originalHtml = button.html();
+                button.html('<i class="bi bi-hourglass-split"></i> Updating...');
+
+                $.ajax({
+                    url: BASE_URL + '/dashboard/orders/' + orderId + '/update-payment-status',
+                    type: 'POST',
+                    data: {
+                        _token: CSRF_TOKEN,
+                        payment_status: newPaymentStatus
+                    },
+                                        success: function(response) {
+                        if (response.success) {
+                            // Update the payment status display to "Paid"
+                            $('#current-payment-status').html('<span class="badge bg-success">Paid</span>');
+
+                            // Hide the payment status update section since payment is now complete
+                            $('#payment-status-buttons').parent().hide();
+
+                            // Show success modal
+                            $('#statusUpdateMessage').text(response.message);
+                            $('#statusUpdateModal').modal('show');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'An error occurred while updating the payment status.';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMessage = xhr.responseJSON.message;
                         }

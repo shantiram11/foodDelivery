@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,36 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        // Get user's orders with related data
+        $orders = Order::with(['restaurant', 'orderItems.menu', 'deliveryStaff'])
+            ->where('user_id', $request->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(3);
+
+        return view('profile', [
             'user' => $request->user(),
+            'orders' => $orders,
         ]);
+    }
+
+    /**
+     * Cancel an order (only if status is 'confirmed')
+     */
+    public function cancelOrder(Request $request, $orderId): RedirectResponse
+    {
+        $order = Order::where('id', $orderId)
+            ->where('user_id', $request->user()->id)
+            ->where('status', 'confirmed')
+            ->first();
+
+        if (!$order) {
+            return Redirect::route('profile.edit')->with('error', 'Order not found or cannot be cancelled.');
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return Redirect::route('profile.edit')->with('success', 'Order cancelled successfully.');
     }
 
     /**

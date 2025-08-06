@@ -49,13 +49,15 @@
                   </div>
                 </li>
                 <li><hr class="dropdown-divider"></li>
+                @if(Auth::user()->shouldAccessDashboard())
                 <li>
                   <a class="dropdown-item" href="{{ route('dashboard') }}">
                     <i class="bi bi-speedometer2"></i>Dashboard
                   </a>
                 </li>
+                @endif
                 <li>
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="{{ route('profile.edit') }}">
                     <i class="bi bi-person"></i>My Profile
                   </a>
                 </li>

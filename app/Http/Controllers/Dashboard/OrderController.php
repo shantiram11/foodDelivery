@@ -102,6 +102,48 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order status updated successfully!');
     }
 
+    public function updatePaymentStatus(Request $request, $id)
+    {
+        $request->validate([
+            'payment_status' => 'required|in:paid'
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        // Check update permissions
+        $currentUser = auth()->user();
+        if ($currentUser->isRestaurantUser() && $order->restaurant_id !== $currentUser->restaurant_id) {
+            return response()->json(['success' => false, 'message' => 'Access denied.'], 403);
+        }
+
+        // Delivery staff cannot update payment status
+        if ($currentUser->isDeliveryStaff()) {
+            return response()->json(['success' => false, 'message' => 'You do not have permission to update payment status.'], 403);
+        }
+
+        // Only allow updating COD orders from pending to paid
+        if ($order->payment_method !== 'cod') {
+            return response()->json(['success' => false, 'message' => 'Payment status can only be updated for COD orders.'], 400);
+        }
+
+        if ($order->payment_status !== 'pending') {
+            return response()->json(['success' => false, 'message' => 'Payment status can only be updated for pending payments.'], 400);
+        }
+
+        $order->payment_status = 'paid';
+        $order->save();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'COD payment marked as received successfully!',
+                'payment_status' => $order->payment_status
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'COD payment marked as received successfully!');
+    }
+
     public function assignDeliveryStaff(Request $request, $id)
     {
         $request->validate([
