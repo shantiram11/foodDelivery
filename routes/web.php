@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\ReservationController;
 use App\Http\Controllers\Dashboard\ReviewController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\SettingController;
+use App\Http\Controllers\Dashboard\TestimonialController;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Front\FrontController;
@@ -104,6 +105,18 @@ Route::middleware(['auth', 'verified', 'dashboard.access'])->prefix('/dashboard'
     Route::get('/contacts/{id}', [DashboardContactController::class, 'show'])->name('contacts.show');
     Route::get('/contacts/{id}/reply', [DashboardContactController::class, 'reply'])->name('contacts.reply');
     Route::delete('/contacts/{id}', [DashboardContactController::class, 'destroy'])->name('contacts.destroy');
+
+    // Testimonials Management
+    Route::resource('testimonials', TestimonialController::class)->names([
+        'index' => 'dashboard.testimonials.index',
+        'create' => 'dashboard.testimonials.create',
+        'store' => 'dashboard.testimonials.store',
+        'show' => 'dashboard.testimonials.show',
+        'edit' => 'dashboard.testimonials.edit',
+        'update' => 'dashboard.testimonials.update',
+        'destroy' => 'dashboard.testimonials.destroy',
+    ]);
+    Route::patch('/testimonials/{testimonial}/toggle-status', [TestimonialController::class, 'toggleStatus'])->name('dashboard.testimonials.toggle-status');
 
 });
 Route::middleware('auth')->group(function () {

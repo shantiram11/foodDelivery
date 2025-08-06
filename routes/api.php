@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\MenuController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ContactController as DashboardContactController;
+use App\Http\Controllers\Api\TestimonialApiController;
 use App\Http\Controllers\Checkout\CartController;
 use App\Http\Controllers\Checkout\CheckoutController;
 use App\Http\Controllers\ContactController;
@@ -29,6 +30,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Public API Routes
 Route::post('/contact', [ContactController::class, 'store']);
+
+// Public Testimonials API (for frontend)
+Route::get('/testimonials/frontend', [TestimonialApiController::class, 'frontend']);
+Route::get('/testimonials/statistics', [TestimonialApiController::class, 'statistics']);
 
 // Protected API Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -108,6 +113,16 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{id}', [DashboardContactController::class, 'show']);
             Route::get('/{id}/reply', [DashboardContactController::class, 'reply']);
             Route::delete('/{id}', [DashboardContactController::class, 'destroy']);
+        });
+
+        // Testimonials Management
+        Route::prefix('testimonials')->group(function () {
+            Route::get('/', [TestimonialApiController::class, 'index']);
+            Route::post('/', [TestimonialApiController::class, 'store']);
+            Route::get('/{testimonial}', [TestimonialApiController::class, 'show']);
+            Route::put('/{testimonial}', [TestimonialApiController::class, 'update']);
+            Route::delete('/{testimonial}', [TestimonialApiController::class, 'destroy']);
+            Route::patch('/{testimonial}/toggle-status', [TestimonialApiController::class, 'toggleStatus']);
         });
     });
 });

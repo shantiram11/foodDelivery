@@ -107,14 +107,29 @@
             </a>
         </li>
 
-        <!-- Reviews & Ratings -->
-        <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">
+        <!-- Testimonials Management -->
+        <li class="nav-group">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-star"></use>
-                </svg> Reviews & Ratings
+                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg') }}#cil-speech"></use>
+                </svg> Testimonials
+                @php
+                    $activeTestimonialsCount = \App\Models\Testimonial::where('is_active', true)->count();
+                @endphp
+                @if($activeTestimonialsCount > 0)
+                    <span class="badge badge-sm bg-success ms-auto">{{ $activeTestimonialsCount }}</span>
+                @endif
             </a>
+            <ul class="nav-group-items compact">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('dashboard.testimonials.index')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> All Testimonials</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('dashboard.testimonials.create')}}"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Add Testimonial</a>
+                </li>
+            </ul>
         </li>
+
 
         <!-- Reports -->
         <li class="nav-item">
