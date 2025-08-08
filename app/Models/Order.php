@@ -16,6 +16,9 @@ class Order extends Model
         'status',
         'payment_method',
         'payment_status',
+        'esewa_transaction_uuid',
+        'esewa_reference_id',
+        'esewa_paid_at',
         'subtotal',
         'total_amount',
         'customer_phone',
@@ -24,7 +27,8 @@ class Order extends Model
 
     protected $casts = [
         'subtotal' => 'decimal:2',
-        'total_amount' => 'decimal:2'
+        'total_amount' => 'decimal:2',
+        'esewa_paid_at' => 'datetime',
     ];
 
     public function user()

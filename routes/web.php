@@ -36,7 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/orders/confirmation/{order?}', [CheckoutController::class, 'confirmationUnified'])->name('order.confirmation');
+
 });
+
+// eSewa payment callbacks (do not require auth)
+Route::get('/payment/esewa/success', [CheckoutController::class, 'esewaSuccess'])->name('payment.esewa.success');
+Route::get('/payment/esewa/failure', [CheckoutController::class, 'esewaFailure'])->name('payment.esewa.failure');
 
 Route::middleware(['auth', 'verified', 'dashboard.access'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 
