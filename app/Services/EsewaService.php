@@ -34,9 +34,19 @@ class EsewaService
         return base64_encode($rawHmac);
     }
 
-    public function verifySignature(array $fields, string $signatureProvided): bool
+    public function verifySignature(array $fields, string $signatureProvided, ?array $signedFieldNames = null): bool
     {
-        $calculated = $this->generateSignature($fields);
+        // Use the exact signed fields list (and order) provided by eSewa when available
+        $signedFieldNames = $signedFieldNames && count($signedFieldNames) > 0
+            ? $signedFieldNames
+            : $this->getSignedFieldsList();
+
+        $signString = $this->buildSignString($fields, $signedFieldNames);
+        $secretKey = config('services.esewa.secret_key');
+
+        $rawHmac = hash_hmac('sha256', $signString, $secretKey, true);
+        $calculated = base64_encode($rawHmac);
+
         return hash_equals($calculated, $signatureProvided);
     }
 }

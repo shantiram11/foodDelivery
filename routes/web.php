@@ -39,9 +39,9 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// eSewa payment callbacks (do not require auth)
-Route::get('/payment/esewa/success', [CheckoutController::class, 'esewaSuccess'])->name('payment.esewa.success');
-Route::get('/payment/esewa/failure', [CheckoutController::class, 'esewaFailure'])->name('payment.esewa.failure');
+// eSewa payment callbacks (do not require auth) - accept both GET and POST
+Route::match(['GET','POST'], '/payment/esewa/success', [CheckoutController::class, 'esewaSuccess'])->name('payment.esewa.success');
+Route::match(['GET','POST'], '/payment/esewa/failure', [CheckoutController::class, 'esewaFailure'])->name('payment.esewa.failure');
 
 Route::middleware(['auth', 'verified', 'dashboard.access'])->get('/dashboard', [\App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 

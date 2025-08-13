@@ -181,31 +181,69 @@ class CheckoutController extends Controller
 
     public function esewaSuccess(Request $request)
     {
-        // eSewa returns at least: amount, total_amount, transaction_uuid, product_code, reference_id, status, signed_field_names, signature
-        $data = $request->all();
-
+        // eSewa may return either flat fields or a base64-encoded 'data' JSON with a 'signature'
         $service = new EsewaService();
+
+        $rawAll = $request->all();
+        $decoded = [];
+        if ($request->has('data')) {
+            $json = base64_decode((string) $request->input('data'), true);
+            if ($json !== false) {
+                $decoded = json_decode($json, true) ?: [];
+            }
+        }
+
+        $verificationFields = [];
         $signedFields = [];
-        if (!empty($data['signed_field_names'])) {
-            $signedFields = array_filter(array_map('trim', explode(',', $data['signed_field_names'])));
+        $signatureProvided = '';
+        $status = '';
+        $transactionUuid = null;
+        $referenceId = null;
+
+        if (!empty($decoded)) {
+            // Use data style: fields are inside decoded payload
+            $signedFields = [];
+            if (!empty($decoded['signed_field_names'])) {
+                $signedFields = array_filter(array_map('trim', explode(',', $decoded['signed_field_names'])));
+            } else {
+                $signedFields = $service->getSignedFieldsList();
+            }
+            foreach ($signedFields as $name) {
+                $verificationFields[$name] = $decoded[$name] ?? '';
+            }
+            $signatureProvided = (string) ($decoded['signature'] ?? $request->input('signature', ''));
+            $status = strtoupper((string) ($decoded['status'] ?? ''));
+            $transactionUuid = $decoded['transaction_uuid'] ?? null;
+            // Prefer transaction_code as reference (eSewa equivalent reference id)
+            $referenceId = $decoded['transaction_code'] ?? ($decoded['reference_id'] ?? null);
         } else {
-            $signedFields = $service->getSignedFieldsList();
+            // Use flat field style
+            if (!empty($rawAll['signed_field_names'])) {
+                $signedFields = array_filter(array_map('trim', explode(',', $rawAll['signed_field_names'])));
+            } else {
+                $signedFields = $service->getSignedFieldsList();
+            }
+            foreach ($signedFields as $name) {
+                $verificationFields[$name] = $rawAll[$name] ?? '';
+            }
+            $signatureProvided = (string) ($rawAll['signature'] ?? '');
+            $status = strtoupper((string) ($rawAll['status'] ?? ''));
+            $transactionUuid = $rawAll['transaction_uuid'] ?? null;
+            $referenceId = $rawAll['reference_id'] ?? null;
         }
 
-        $fieldsToVerify = [];
-        foreach ($signedFields as $name) {
-            $fieldsToVerify[$name] = $data[$name] ?? '';
-        }
-
-        $signatureProvided = $data['signature'] ?? '';
-        $isValid = $signatureProvided && $service->verifySignature($fieldsToVerify, $signatureProvided);
+        $isValid = $signatureProvided && $service->verifySignature($verificationFields, $signatureProvided, $signedFields);
 
         if (!$isValid) {
-            return redirect()->route('payment.esewa.failure')->with('error', 'Invalid payment signature.');
+            // Allow non-production fallback if secret key is not configured but eSewa reports success
+            $secretMissing = empty(config('services.esewa.secret_key'));
+            $isLocalLike = app()->environment(['local', 'development', 'testing']);
+            if ($isLocalLike && $secretMissing && in_array($status, ['COMPLETE', 'SUCCESS'], true)) {
+                // Proceed in RC/local without signature validation
+            } else {
+                return redirect()->route('payment.esewa.failure')->with('error', 'Invalid payment signature.');
+            }
         }
-
-        $transactionUuid = $data['transaction_uuid'] ?? null;
-        $referenceId = $data['reference_id'] ?? null;
 
         if (!$transactionUuid) {
             return redirect()->route('home')->with('error', 'Missing transaction reference.');

@@ -705,55 +705,48 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const paymentOptions = document.querySelectorAll('.payment-option');
+    const paymentRadios = document.querySelectorAll('input[type="radio"][name="payment_method"]');
     const paymentMethodInput = document.getElementById('selectedPaymentMethod');
     const checkoutForm = document.getElementById('checkoutForm');
     const placeOrderBtn = document.getElementById('placeOrderBtn');
 
-    // Handle payment method selection
+    function applySelectionByMethod(method) {
+        paymentOptions.forEach(opt => {
+            const isSelected = opt.dataset.payment === method;
+            opt.classList.toggle('selected', isSelected);
+            const badge = opt.querySelector('.payment-badge');
+            if (badge) badge.style.display = isSelected ? 'inline-block' : 'none';
+            const radio = opt.querySelector('input[type="radio"]');
+            if (radio) radio.checked = isSelected;
+        });
+        paymentMethodInput.value = method;
+    }
+
+    // Click anywhere on the option box
     paymentOptions.forEach(option => {
         option.addEventListener('click', function() {
-            // Remove selected class from all options
-            paymentOptions.forEach(opt => {
-                opt.classList.remove('selected');
-                const badge = opt.querySelector('.payment-badge');
-                if (badge) badge.style.display = 'none';
-            });
+            const method = this.dataset.payment;
+            applySelectionByMethod(method);
+        });
+    });
 
-            // Add selected class to clicked option
-            this.classList.add('selected');
-
-            // Show selected badge
-            const selectedBadge = this.querySelector('.payment-badge');
-            if (selectedBadge) {
-                selectedBadge.style.display = 'inline-block';
-                selectedBadge.textContent = 'Selected';
-            }
-
-            // Update hidden input
-            const paymentMethod = this.dataset.payment;
-            paymentMethodInput.value = paymentMethod;
-
-            // Update radio button
-            const radioBtn = this.querySelector('input[type="radio"]');
-            if (radioBtn) radioBtn.checked = true;
+    // Also respond to direct radio changes (extra safety)
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            applySelectionByMethod(this.value);
         });
     });
 
     // Handle form submission
-    checkoutForm.addEventListener('submit', function(e) {
-        // Show loading state
+    checkoutForm.addEventListener('submit', function() {
         placeOrderBtn.disabled = true;
         placeOrderBtn.classList.add('loading');
         placeOrderBtn.textContent = 'Processing Order...';
     });
 
-    // Initialize payment badges visibility
-    paymentOptions.forEach(option => {
-        const badge = option.querySelector('.payment-badge');
-        if (badge && !option.classList.contains('selected')) {
-            badge.style.display = 'none';
-        }
-    });
+    // Initialize badges and sync hidden field with any pre-checked radio
+    const initiallyChecked = Array.from(paymentRadios).find(r => r.checked);
+    applySelectionByMethod(initiallyChecked ? initiallyChecked.value : paymentMethodInput.value || 'cod');
 });
 </script>
 

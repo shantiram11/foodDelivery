@@ -23,6 +23,9 @@
                         <!-- Single Order Info -->
                         <div class="order-info mb-4">
                             <div class="mb-2">
+                                <small class="text-muted">Order Code</small>
+                            </div>
+                            <div class="mb-2">
                                 <span class="order-id">{{ $order->order_number }}</span>
                             </div>
                             <div class="mb-2">
@@ -30,6 +33,20 @@
                             </div>
                             <div class="mb-2">
                                 <small class="text-muted">{{ $order->restaurant->name }}</small>
+                            </div>
+                            @if($order->payment_method === 'esewa' && $order->esewa_reference_id)
+                                <div class="mb-2">
+                                    <small class="text-muted">eSewa Reference ID</small>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="order-id">{{ $order->esewa_reference_id }}</span>
+                                </div>
+                            @endif
+                            <div class="mb-2">
+                                <small class="text-muted">Payment Status</small>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">{{ ucfirst($order->payment_status) }}</small>
                             </div>
                             <div class="total-price">Rs. {{ number_format($order->total_amount, 2) }}</div>
                         </div>
@@ -45,6 +62,17 @@
                             <div class="mb-2">
                                 <small class="text-muted">{{ count($orders) }} Orders Placed</small>
                             </div>
+                            @php
+                                $ref = $orders->pluck('esewa_reference_id')->filter()->first();
+                            @endphp
+                            @if($ref)
+                                <div class="mb-2">
+                                    <small class="text-muted">eSewa Reference ID</small>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="order-id">{{ $ref }}</span>
+                                </div>
+                            @endif
                             <div class="total-price mb-3">Rs. {{ number_format($orders->sum('total_amount'), 2) }}</div>
                         </div>
 
