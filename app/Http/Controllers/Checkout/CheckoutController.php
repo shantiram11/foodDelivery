@@ -52,6 +52,20 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('error', 'Your cart is empty!');
         }
 
+        // Require user phone and address before placing order
+        $user = Auth::user();
+        if (!$user || empty($user->phone) || empty($user->address)) {
+            $message = 'Please add your phone number and address in your profile before placing an order.';
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'redirect_url' => route('profile.edit'),
+                ], 422);
+            }
+            return redirect()->route('profile.edit')->with('error', $message);
+        }
+
         try {
             DB::beginTransaction();
 
@@ -74,7 +88,7 @@ class CheckoutController extends Controller
                     'payment_status' => 'pending',
                     'subtotal' => $restaurantTotal,
                     'total_amount' => $restaurantTotal,
-                    'customer_phone' => $request->input('customer_phone', auth()->user()->phone ?? '9841234567')
+                    'customer_phone' => $request->input('customer_phone', $user->phone)
                 ]);
 
                 $orderIds[] = $order->id;

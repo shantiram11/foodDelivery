@@ -36,8 +36,15 @@
                                         <i class="bi bi-telephone"></i>
                                     </div>
                                     <div class="info-content">
-                                        <div class="info-title">{{ auth()->user()->phone ?? '9841234567'}}</div>
+@if(!empty(auth()->user()->phone))
+                                        <div class="info-title">{{ auth()->user()->phone }}</div>
                                         <div class="info-subtitle">Phone</div>
+@else
+                                        <div class="info-title" style="color:#dc2626;">Phone not set</div>
+                                        <div class="info-subtitle">
+                                            <a href="{{ route('profile.edit') }}" style="text-decoration: underline; color:#2563eb;">Add your phone number in profile</a>
+                                        </div>
+@endif
                                     </div>
                                 </div>
                             </div>
@@ -47,8 +54,15 @@
                                         <i class="bi bi-geo-alt"></i>
                                     </div>
                                     <div class="info-content">
-                                        <div class="info-title">{{ auth()->user()->address ?? 'Thamel, Kathmandu 44600'}}</div>
+@if(!empty(auth()->user()->address))
+                                        <div class="info-title">{{ auth()->user()->address }}</div>
                                         <div class="info-subtitle">Address</div>
+@else
+                                        <div class="info-title" style="color:#dc2626;">Address not set</div>
+                                        <div class="info-subtitle">
+                                            <a href="{{ route('profile.edit') }}" style="text-decoration: underline; color:#2563eb;">Add your address in profile</a>
+                                        </div>
+@endif
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +91,7 @@
                                 </label>
                             </div>
 
-                            <!-- Khalti -->
+                            {{-- <!-- Khalti -->
                             <div class="payment-option" data-payment="khalti">
                                 <input type="radio" name="payment_method" id="khalti" value="khalti" class="d-none">
                                 <label for="khalti" class="payment-label payment-label-purple">
@@ -89,7 +103,7 @@
                                         <div class="payment-subtitle">Pay instantly with Khalti</div>
                                     </div>
                                 </label>
-                            </div>
+                            </div> --}}
 
                             <!-- eSewa -->
                             <div class="payment-option" data-payment="esewa">
@@ -153,10 +167,19 @@
                         <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
                             @csrf
                             <input type="hidden" name="payment_method" id="selectedPaymentMethod" value="cod">
-                            <button type="submit" class="btn btn-place-order w-100" id="placeOrderBtn">
+@php
+    $missingContact = empty(auth()->user()->phone) || empty(auth()->user()->address);
+@endphp
+                            <button type="submit" class="btn btn-place-order w-100" id="placeOrderBtn" {{ $missingContact ? 'disabled' : '' }}>
                                 Place Order • Rs. {{ number_format($total_amount ?? 0, 2) }}
                             </button>
                         </form>
+
+@if($missingContact)
+                        <div class="alert alert-warning mt-2" role="alert" style="font-size:0.875rem;">
+                            Please add your phone number and address in your <a href="{{ route('profile.edit') }}" class="text-decoration-underline">profile</a> to proceed with the order.
+                        </div>
+@endif
 
                         <!-- Compact Pickup Info -->
                         <div class="delivery-info-card mt-3">

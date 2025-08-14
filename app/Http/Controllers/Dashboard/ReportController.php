@@ -148,8 +148,10 @@ class ReportController extends Controller
             $monthStart = Carbon::now()->subMonths($i)->startOfMonth();
             $monthEnd = Carbon::now()->subMonths($i)->endOfMonth();
 
+            // Consider revenue from orders that are at least confirmed or completed
+            // This avoids showing all zeros when no orders have been marked completed yet
             $query = Order::whereBetween('created_at', [$monthStart, $monthEnd])
-                ->where('status', 'completed');
+                ->whereIn('status', ['confirmed', 'completed']);
 
             if ($currentUser->isRestaurantUser() || $currentUser->isDeliveryStaff()) {
                 $query->where('restaurant_id', $currentUser->restaurant_id);
